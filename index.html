@@ -7,18 +7,18 @@
 <meta name="description" content="Sites, otimização de Google Meu Negócio e automação de WhatsApp pra quem vive do próprio trabalho.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B0912;
-    --surface:#161222;
-    --surface-2:#1E1830;
+    --bg:#08060F;
+    --surface:#12101C;
+    --surface-2:#191527;
     --text:#F5F3FA;
     --text-soft:#9E96B8;
-    --text-mute:#6E6688;
+    --text-mute:#635C7C;
     --accent:#8B5CF6;
     --accent-2:#E879C8;
-    --line:rgba(255,255,255,0.10);
+    --line:rgba(255,255,255,0.09);
     --y:#F2C94C;
     --o:#F2994A;
     --r:#EB5757;
@@ -33,126 +33,131 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  .display{ font-family:'Space Grotesk', sans-serif; }
+  .display{ font-family:'Sora', sans-serif; }
   .mono{ font-family:'JetBrains Mono', monospace; }
   a{ color:inherit; }
   img{ max-width:100%; display:block; }
+  button{ font-family:inherit; }
 
-  .wrap{ max-width:920px; margin:0 auto; padding:0 24px; }
-  section{ padding:64px 0; }
+  .wrap{ max-width:960px; margin:0 auto; padding:0 20px; }
+  section{ padding:56px 0; }
 
   /* ---------- header ---------- */
   header{
     position:sticky; top:0; z-index:10;
-    background:rgba(11,9,18,0.85);
-    backdrop-filter:blur(8px);
+    background:rgba(8,6,15,0.88);
+    backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
   .nav{
     display:flex; align-items:center; justify-content:space-between;
-    max-width:920px; margin:0 auto; padding:18px 24px;
+    max-width:960px; margin:0 auto; padding:16px 20px;
+    gap:16px;
   }
-  .logo{ font-family:'Space Grotesk', sans-serif; font-size:20px; font-weight:700; letter-spacing:-0.02em; }
-  .nav-links{ display:flex; gap:28px; list-style:none; }
+  .logo{ font-family:'Sora', sans-serif; font-size:19px; font-weight:700; letter-spacing:-0.01em; flex-shrink:0; }
+  .nav-links{ display:flex; gap:24px; list-style:none; overflow-x:auto; scrollbar-width:none; }
+  .nav-links::-webkit-scrollbar{ display:none; }
   .nav-links a{
     font-family:'JetBrains Mono', monospace;
-    font-size:13px;
+    font-size:12.5px;
     color:var(--text-soft);
     text-decoration:none;
+    white-space:nowrap;
     transition:color .15s ease;
   }
   .nav-links a:hover{ color:var(--text); }
-  .nav-toggle{ display:none; }
-
-  @media (max-width:680px){
-    .nav-links{ display:none; }
-  }
 
   /* ---------- hero ---------- */
-  .hero{ padding:80px 0 56px; text-align:center; }
+  .hero{ padding:56px 0 40px; text-align:center; }
   .eyebrow{
-    display:inline-block;
+    display:inline-flex; align-items:center; gap:6px;
     font-family:'JetBrains Mono', monospace;
     font-size:12px;
     color:var(--accent-2);
-    letter-spacing:0.1em;
+    letter-spacing:0.08em;
     text-transform:uppercase;
-    margin-bottom:20px;
+    background:rgba(232,121,200,0.08);
+    border:1px solid rgba(232,121,200,0.25);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:24px;
   }
   h1{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:clamp(32px, 5.5vw, 52px);
-    font-weight:700;
+    font-family:'Sora', sans-serif;
+    font-size:clamp(28px, 6vw, 50px);
+    font-weight:800;
     line-height:1.15;
     letter-spacing:-0.02em;
     max-width:680px;
-    margin:0 auto 20px;
+    margin:0 auto 18px;
   }
   h1 .accent{ color:var(--accent); }
   .hero-sub{
     color:var(--text-soft);
-    font-size:17px;
-    max-width:460px;
+    font-size:16.5px;
+    max-width:440px;
     margin:0 auto 32px;
   }
   .btn-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
   .btn-primary{
     display:inline-flex; align-items:center; gap:8px;
     background:var(--accent); color:#fff;
-    font-family:'JetBrains Mono', monospace;
-    font-size:13.5px;
-    padding:13px 22px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    padding:13px 24px;
     text-decoration:none;
-    border-radius:8px;
+    border-radius:10px;
     border:none;
     cursor:pointer;
-    transition:opacity .15s ease, transform .15s ease;
+    box-shadow:0 8px 24px -8px rgba(139,92,246,0.5);
+    transition:transform .15s ease, box-shadow .15s ease;
   }
-  .btn-primary:hover{ opacity:0.9; }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 12px 28px -8px rgba(139,92,246,0.6); }
   .btn-secondary{
     display:inline-flex; align-items:center;
-    font-family:'JetBrains Mono', monospace;
-    font-size:13.5px;
-    padding:13px 22px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    padding:13px 24px;
     text-decoration:none;
     color:var(--text);
     border:1px solid var(--line);
-    border-radius:8px;
-    transition:border-color .15s ease;
+    border-radius:10px;
+    transition:border-color .15s ease, background .15s ease;
   }
-  .btn-secondary:hover{ border-color:var(--accent); }
+  .btn-secondary:hover{ border-color:var(--accent); background:rgba(139,92,246,0.06); }
 
-  /* ---------- pills ---------- */
-  .pills{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
-    max-width:640px; margin:40px auto 0;
+  /* ---------- stats bar ---------- */
+  .stats{
+    display:grid; grid-template-columns:repeat(4, 1fr);
+    gap:16px; max-width:640px; margin:44px auto 0;
+    border-top:1px solid var(--line);
+    padding-top:32px;
   }
-  .pill{
-    font-family:'JetBrains Mono', monospace;
-    font-size:12.5px;
-    color:var(--text-soft);
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    padding:9px 16px;
-    border-radius:999px;
-    white-space:nowrap;
+  .stat{ text-align:center; }
+  .stat-num{ font-family:'Sora', sans-serif; font-size:24px; font-weight:700; color:var(--accent); }
+  .stat-label{ font-size:11.5px; color:var(--text-mute); margin-top:4px; }
+
+  @media (max-width:600px){
+    .stats{ grid-template-columns:repeat(2, 1fr); gap:24px; }
   }
 
-  /* ---------- section label ---------- */
-  .section-head{ text-align:center; margin-bottom:40px; }
+  /* ---------- section head ---------- */
+  .section-head{ text-align:center; margin-bottom:36px; }
   .section-label{
     display:inline-block;
     font-family:'JetBrains Mono', monospace;
     font-size:11.5px;
-    color:var(--text-mute);
+    color:var(--accent-2);
     letter-spacing:0.1em;
     text-transform:uppercase;
     margin-bottom:12px;
   }
   h2{
-    font-family:'Space Grotesk', sans-serif;
+    font-family:'Sora', sans-serif;
     font-weight:700;
-    font-size:clamp(24px, 4vw, 32px);
+    font-size:clamp(22px, 4vw, 30px);
     letter-spacing:-0.01em;
     max-width:560px;
     margin:0 auto;
@@ -161,67 +166,96 @@
 
   /* ---------- problema ---------- */
   .problema{ text-align:center; }
-  .problema p{ max-width:480px; margin:16px auto 0; font-size:15px; }
+  .problema p{ max-width:460px; margin:14px auto 0; font-size:15px; }
+
+  /* ---------- recursos (cards) ---------- */
+  .recursos-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;
+  }
+  .recurso-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 18px;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .recurso-card:hover{ border-color:rgba(139,92,246,0.35); transform:translateY(-2px); }
+  .recurso-icon{
+    width:38px; height:38px; border-radius:10px;
+    background:rgba(139,92,246,0.12);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    margin-bottom:14px;
+  }
+  .recurso-title{ font-size:14.5px; font-weight:600; margin-bottom:5px; }
+  .recurso-desc{ font-size:12.5px; color:var(--text-soft); line-height:1.5; }
+
+  @media (max-width:680px){
+    .recursos-grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+  @media (max-width:420px){
+    .recursos-grid{ grid-template-columns:1fr; }
+  }
 
   /* ---------- pacotes ---------- */
   .pacotes-grid{
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
   }
   .pacote-card{
     background:var(--surface);
     border:1px solid var(--line);
-    border-radius:14px;
-    padding:28px 24px;
+    border-radius:16px;
+    padding:26px 22px;
     display:flex; flex-direction:column;
   }
   .pacote-card.featured{
     border:2px solid var(--accent);
-    background:var(--surface-2);
+    background:linear-gradient(180deg, rgba(139,92,246,0.08), var(--surface-2) 60%);
     position:relative;
   }
   .featured-badge{
-    position:absolute; top:-13px; left:24px;
+    position:absolute; top:-13px; left:22px;
     background:var(--accent); color:#fff;
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
     font-size:11px;
     padding:4px 12px;
     border-radius:999px;
   }
-  .pacote-name{ font-family:'Space Grotesk', sans-serif; font-size:19px; font-weight:700; margin-bottom:4px; }
-  .pacote-tag{ font-size:13px; color:var(--text-soft); margin-bottom:18px; }
+  .pacote-name{ font-family:'Sora', sans-serif; font-size:18px; font-weight:700; margin-bottom:4px; }
+  .pacote-tag{ font-size:12.5px; color:var(--text-soft); margin-bottom:18px; }
   .pacote-price{
-    font-family:'JetBrains Mono', monospace;
-    font-size:30px; font-weight:500;
+    font-family:'Sora', sans-serif;
+    font-size:28px; font-weight:700;
     margin-bottom:20px;
   }
-  .pacote-price span{ font-size:13px; color:var(--text-mute); font-weight:400; }
   .pacote-list{ list-style:none; display:flex; flex-direction:column; gap:10px; flex:1; }
   .pacote-list li{
-    font-size:13.5px; color:var(--text-soft);
+    font-size:13px; color:var(--text-soft);
     padding-left:18px; position:relative;
   }
   .pacote-list li::before{
-    content:"—"; position:absolute; left:0; color:var(--accent-2);
+    content:"✓"; position:absolute; left:0; color:var(--accent-2); font-weight:600;
   }
   .pacote-note{
-    text-align:center; font-size:13px; color:var(--text-mute);
-    margin-top:28px;
+    text-align:center; font-size:12.5px; color:var(--text-mute);
+    margin-top:26px;
   }
 
   @media (max-width:760px){
     .pacotes-grid{ grid-template-columns:1fr; }
+    .pacote-card.featured{ order:-1; }
   }
 
   /* ---------- trilha / como funciona ---------- */
-  .trilha{ position:relative; }
   .trilha-track{
     display:flex; justify-content:space-between; align-items:flex-start;
     position:relative;
-    margin-top:8px;
+    gap:8px;
   }
   .trilha-line{
-    position:absolute; top:19px; left:0; right:0; height:2px;
-    background:var(--line);
+    position:absolute; top:19px; left:5%; right:5%; height:2px;
+    background:linear-gradient(90deg, var(--accent), var(--accent), var(--line));
     z-index:0;
   }
   .trilha-node{
@@ -229,63 +263,69 @@
     display:flex; flex-direction:column; align-items:center;
     text-align:center;
     flex:1;
-    padding:0 8px;
   }
   .node-circle{
     width:40px; height:40px; border-radius:50%;
     background:var(--surface);
-    border:2px solid var(--line);
+    border:2px solid var(--accent);
     display:flex; align-items:center; justify-content:center;
     font-family:'JetBrains Mono', monospace;
     font-size:13px;
     margin-bottom:14px;
-    color:var(--text-soft);
-  }
-  .trilha-node.done .node-circle{
-    border-color:var(--accent); color:var(--accent);
-    background:var(--surface-2);
+    color:var(--accent);
   }
   .trilha-node.final .node-circle{
-    background:var(--accent); border-color:var(--accent); color:#fff;
+    background:var(--accent); color:#fff;
   }
-  .node-title{ font-size:14px; font-weight:500; margin-bottom:4px; }
-  .node-desc{ font-size:12.5px; color:var(--text-soft); max-width:150px; }
+  .node-title{ font-size:14px; font-weight:600; margin-bottom:4px; }
+  .node-desc{ font-size:12px; color:var(--text-soft); max-width:140px; line-height:1.5; }
 
   @media (max-width:680px){
-    .trilha-track{ flex-direction:column; gap:28px; align-items:flex-start; }
+    .trilha-track{ flex-direction:column; gap:0; align-items:stretch; }
     .trilha-line{ display:none; }
-    .trilha-node{ flex-direction:row; text-align:left; padding:0; }
+    .trilha-node{ flex-direction:row; text-align:left; padding:14px 0; border-bottom:1px solid var(--line); }
+    .trilha-node:last-child{ border-bottom:none; }
     .node-circle{ margin-bottom:0; margin-right:16px; flex-shrink:0; }
+    .node-desc{ max-width:none; }
   }
 
   /* ---------- quiz ---------- */
   .quiz-box{
     background:var(--surface);
     border:1px solid var(--line);
-    border-radius:16px;
-    padding:32px;
+    border-radius:18px;
+    padding:28px;
     max-width:560px;
     margin:0 auto;
   }
-  .quiz-progress{ height:3px; background:var(--surface-2); border-radius:2px; margin-bottom:26px; overflow:hidden; }
-  .quiz-progress-bar{ height:100%; width:0%; background:var(--accent); transition:width .3s ease; }
+  @media (max-width:500px){ .quiz-box{ padding:20px; } }
+
+  .quiz-progress{ height:4px; background:var(--surface-2); border-radius:2px; margin-bottom:24px; overflow:hidden; }
+  .quiz-progress-bar{ height:100%; width:0%; background:var(--accent); transition:width .3s ease; border-radius:2px; }
   .quiz-step{ display:none; }
   .quiz-step.active{ display:block; }
-  .quiz-question{ font-size:16px; margin-bottom:18px; font-weight:500; }
+  .quiz-question{ font-size:16px; margin-bottom:18px; font-weight:600; }
   .quiz-options{ display:flex; flex-direction:column; gap:10px; }
   .quiz-option{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
     text-align:left;
     background:var(--surface-2);
     border:1px solid var(--line);
     color:var(--text);
     font-family:'Inter', sans-serif;
     font-size:14px;
-    padding:14px 16px;
-    border-radius:8px;
+    padding:15px 18px;
+    border-radius:10px;
     cursor:pointer;
-    transition:border-color .15s ease, background .15s ease;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
   }
-  .quiz-option:hover{ border-color:var(--accent); }
+  .quiz-option:hover{
+    border-color:var(--accent);
+    background:rgba(139,92,246,0.1);
+    transform:translateX(2px);
+  }
+  .quiz-option .arrow{ color:var(--text-mute); flex-shrink:0; transition:color .15s ease, transform .15s ease; }
+  .quiz-option:hover .arrow{ color:var(--accent); transform:translateX(2px); }
 
   .quiz-result{ display:none; }
   .quiz-result.active{ display:block; }
@@ -299,22 +339,23 @@
     margin-bottom:14px;
   }
   .result-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
-  .result-title{ font-family:'Space Grotesk', sans-serif; font-size:22px; font-weight:700; margin-bottom:8px; }
+  .result-title{ font-family:'Sora', sans-serif; font-size:21px; font-weight:700; margin-bottom:8px; }
   .result-desc{ font-size:14.5px; color:var(--text-soft); margin-bottom:8px; }
-  .result-price{ font-family:'JetBrains Mono', monospace; font-size:15px; color:var(--accent-2); margin-bottom:22px; }
+  .result-price{ font-family:'Sora', sans-serif; font-size:22px; font-weight:700; color:var(--accent-2); margin-bottom:22px; }
   .result-cta{
     display:inline-flex; align-items:center; gap:8px;
     background:var(--accent); color:#fff;
-    font-family:'JetBrains Mono', monospace;
-    font-size:13.5px;
-    padding:13px 20px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:13px 22px;
     text-decoration:none;
-    border-radius:8px;
+    border-radius:10px;
   }
   .quiz-retry{
     display:block; margin-top:18px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:12px; color:var(--text-mute);
+    font-family:'Inter', sans-serif;
+    font-size:12.5px; color:var(--text-mute);
     background:none; border:none; cursor:pointer;
     text-decoration:underline;
     padding:0;
@@ -325,9 +366,9 @@
     background:var(--surface);
     border:1px dashed var(--line);
     border-radius:16px;
-    padding:36px;
+    padding:32px;
     text-align:center;
-    max-width:480px; margin:0 auto;
+    max-width:460px; margin:0 auto;
   }
   .prova-badge{
     display:inline-block;
@@ -346,11 +387,16 @@
 
   footer{
     text-align:center;
-    padding:32px 24px 48px;
+    padding:28px 20px 44px;
     font-family:'JetBrains Mono', monospace;
-    font-size:12px;
+    font-size:11.5px;
     color:var(--text-mute);
     border-top:1px solid var(--line);
+  }
+
+  @media (max-width:600px){
+    section{ padding:44px 0; }
+    .hero{ padding:44px 0 32px; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -380,16 +426,15 @@
     <h1>Com a Klippy, <span class="accent">seu trabalho</span> aparece do jeito que merece.</h1>
     <p class="hero-sub">Site profissional, Google otimizado e menos tempo perdido respondendo a mesma coisa no WhatsApp.</p>
     <div class="btn-row">
-      <a class="btn-primary" href="#diagnostico">fazer diagnóstico ↗</a>
+      <a class="btn-primary" href="#diagnostico">fazer diagnóstico →</a>
       <a class="btn-secondary" href="#pacotes">ver pacotes</a>
     </div>
-    <div class="pills">
-      <span class="pill">site one-page responsivo</span>
-      <span class="pill">domínio configurado</span>
-      <span class="pill">otimização google meu negócio</span>
-      <span class="pill">automação de whatsapp</span>
-      <span class="pill">atualização grátis em 15 dias</span>
-      <span class="pill">suporte direto com você</span>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num mono">3</div><div class="stat-label">formatos de pacote</div></div>
+      <div class="stat"><div class="stat-num mono">15</div><div class="stat-label">dias de ajuste grátis</div></div>
+      <div class="stat"><div class="stat-num mono">100%</div><div class="stat-label">feito sob medida</div></div>
+      <div class="stat"><div class="stat-num mono">1:1</div><div class="stat-label">suporte direto comigo</div></div>
     </div>
   </div>
 
@@ -398,6 +443,46 @@
     <div class="section-head">
       <h2>Quem tem site aparece primeiro no Google.</h2>
       <p>Quem não tem, perde cliente todo dia — pra quem apareceu primeiro na busca.</p>
+    </div>
+  </section>
+
+  <!-- RECURSOS -->
+  <section>
+    <div class="section-head">
+      <span class="section-label">o que você leva</span>
+      <h2>Tudo que você precisa pra ser encontrado</h2>
+    </div>
+    <div class="recursos-grid">
+      <div class="recurso-card">
+        <div class="recurso-icon">🖥️</div>
+        <div class="recurso-title">Site one-page responsivo</div>
+        <div class="recurso-desc">Funciona bem no celular, que é onde seu cliente vai te encontrar.</div>
+      </div>
+      <div class="recurso-card">
+        <div class="recurso-icon">🌐</div>
+        <div class="recurso-title">Domínio configurado</div>
+        <div class="recurso-desc">Endereço próprio, sem taxa escondida no meio do caminho.</div>
+      </div>
+      <div class="recurso-card">
+        <div class="recurso-icon">📍</div>
+        <div class="recurso-title">Google Meu Negócio</div>
+        <div class="recurso-desc">Otimizado pra aparecer quando alguém busca perto de você.</div>
+      </div>
+      <div class="recurso-card">
+        <div class="recurso-icon">💬</div>
+        <div class="recurso-title">Automação de WhatsApp</div>
+        <div class="recurso-desc">Menos tempo respondendo a mesma pergunta o dia inteiro.</div>
+      </div>
+      <div class="recurso-card">
+        <div class="recurso-icon">🛠️</div>
+        <div class="recurso-title">Atualização grátis</div>
+        <div class="recurso-desc">Até 15 dias após a entrega, sem custo, pra ajustes simples.</div>
+      </div>
+      <div class="recurso-card">
+        <div class="recurso-icon">🤝</div>
+        <div class="recurso-title">Suporte direto comigo</div>
+        <div class="recurso-desc">Sem central de atendimento, sem robô — só eu, respondendo.</div>
+      </div>
     </div>
   </section>
 
@@ -412,7 +497,7 @@
       <div class="pacote-card">
         <div class="pacote-name">Presença</div>
         <div class="pacote-tag">Seu primeiro passo pra existir online</div>
-        <div class="pacote-price">R$ 699</div>
+        <div class="pacote-price mono">R$ 699</div>
         <ul class="pacote-list">
           <li>Site one-page sob medida, a partir do seu briefing</li>
           <li>Domínio configurado</li>
@@ -425,7 +510,7 @@
         <span class="featured-badge">mais escolhido</span>
         <div class="pacote-name">Visibilidade</div>
         <div class="pacote-tag">Presença + ser encontrado</div>
-        <div class="pacote-price">R$ 999</div>
+        <div class="pacote-price mono">R$ 999</div>
         <ul class="pacote-list">
           <li>Tudo do Pacote Presença</li>
           <li>Otimização completa do Google Meu Negócio</li>
@@ -437,7 +522,7 @@
       <div class="pacote-card">
         <div class="pacote-name">Completo</div>
         <div class="pacote-tag">Presença + visibilidade + tempo de volta</div>
-        <div class="pacote-price">R$ 2.999</div>
+        <div class="pacote-price mono">R$ 2.999</div>
         <ul class="pacote-list">
           <li>Tudo do Pacote Visibilidade</li>
           <li>Automação de respostas no WhatsApp</li>
@@ -456,29 +541,27 @@
       <span class="section-label">como funciona</span>
       <h2>Do briefing ao site no ar</h2>
     </div>
-    <div class="trilha">
-      <div class="trilha-track">
-        <div class="trilha-line"></div>
-        <div class="trilha-node done">
-          <div class="node-circle">01</div>
-          <div class="node-title">Briefing</div>
-          <div class="node-desc">Você me conta sobre seu trabalho — por WhatsApp ou formulário, do jeito que for melhor pra sua rotina.</div>
-        </div>
-        <div class="trilha-node done">
-          <div class="node-circle">02</div>
-          <div class="node-title">Desenvolvimento</div>
-          <div class="node-desc">Eu monto tudo enquanto você segue sua rotina.</div>
-        </div>
-        <div class="trilha-node done">
-          <div class="node-circle">03</div>
-          <div class="node-title">Entrega</div>
-          <div class="node-desc">Site no ar, testado, pronto pra receber cliente.</div>
-        </div>
-        <div class="trilha-node final">
-          <div class="node-circle">✓</div>
-          <div class="node-title">Site pronto</div>
-          <div class="node-desc">Sua presença online, funcionando.</div>
-        </div>
+    <div class="trilha-track">
+      <div class="trilha-line"></div>
+      <div class="trilha-node">
+        <div class="node-circle">01</div>
+        <div class="node-title">Briefing</div>
+        <div class="node-desc">Você me conta sobre seu trabalho — por WhatsApp ou formulário, do jeito que for melhor pra sua rotina.</div>
+      </div>
+      <div class="trilha-node">
+        <div class="node-circle">02</div>
+        <div class="node-title">Desenvolvimento</div>
+        <div class="node-desc">Eu monto tudo enquanto você segue sua rotina.</div>
+      </div>
+      <div class="trilha-node">
+        <div class="node-circle">03</div>
+        <div class="node-title">Entrega</div>
+        <div class="node-desc">Site no ar, testado, pronto pra receber cliente.</div>
+      </div>
+      <div class="trilha-node final">
+        <div class="node-circle">✓</div>
+        <div class="node-title">Site pronto</div>
+        <div class="node-desc">Sua presença online, funcionando.</div>
       </div>
     </div>
   </section>
@@ -496,27 +579,27 @@
       <div class="quiz-step active" data-step="0">
         <p class="quiz-question">Quando alguém procura seu serviço no Google, te encontra?</p>
         <div class="quiz-options">
-          <button class="quiz-option" data-axis="presenca" data-score="0">Sim, tenho site e apareço bem</button>
-          <button class="quiz-option" data-axis="presenca" data-score="2">Tenho perfil no Google mas sem site</button>
-          <button class="quiz-option" data-axis="presenca" data-score="3">Não apareço em nada</button>
+          <button class="quiz-option" data-axis="presenca" data-score="0"><span>Sim, tenho site e apareço bem</span><span class="arrow">→</span></button>
+          <button class="quiz-option" data-axis="presenca" data-score="2"><span>Tenho perfil no Google mas sem site</span><span class="arrow">→</span></button>
+          <button class="quiz-option" data-axis="presenca" data-score="3"><span>Não apareço em nada</span><span class="arrow">→</span></button>
         </div>
       </div>
 
       <div class="quiz-step" data-step="1">
         <p class="quiz-question">Como seus clientes entram em contato pra pedir orçamento?</p>
         <div class="quiz-options">
-          <button class="quiz-option" data-axis="visibilidade" data-score="3">Me acham no Instagram e mandam DM</button>
-          <button class="quiz-option" data-axis="visibilidade" data-score="1">Pedem pelo WhatsApp mas respondo tudo manual</button>
-          <button class="quiz-option" data-axis="visibilidade" data-score="0">Tenho um processo organizado</button>
+          <button class="quiz-option" data-axis="visibilidade" data-score="3"><span>Me acham no Instagram e mandam DM</span><span class="arrow">→</span></button>
+          <button class="quiz-option" data-axis="visibilidade" data-score="1"><span>Pedem pelo WhatsApp mas respondo tudo manual</span><span class="arrow">→</span></button>
+          <button class="quiz-option" data-axis="visibilidade" data-score="0"><span>Tenho um processo organizado</span><span class="arrow">→</span></button>
         </div>
       </div>
 
       <div class="quiz-step" data-step="2">
         <p class="quiz-question">Quanto tempo você gasta por semana respondendo a mesma coisa no WhatsApp?</p>
         <div class="quiz-options">
-          <button class="quiz-option" data-axis="completo" data-score="0">Menos de 1 hora</button>
-          <button class="quiz-option" data-axis="completo" data-score="1">Entre 1 e 3 horas</button>
-          <button class="quiz-option" data-axis="completo" data-score="3">Mais de 3 horas, é cansativo</button>
+          <button class="quiz-option" data-axis="completo" data-score="0"><span>Menos de 1 hora</span><span class="arrow">→</span></button>
+          <button class="quiz-option" data-axis="completo" data-score="1"><span>Entre 1 e 3 horas</span><span class="arrow">→</span></button>
+          <button class="quiz-option" data-axis="completo" data-score="3"><span>Mais de 3 horas, é cansativo</span><span class="arrow">→</span></button>
         </div>
       </div>
 
@@ -525,7 +608,7 @@
         <p class="result-title" id="result-title">título</p>
         <p class="result-desc" id="result-desc">descrição</p>
         <p class="result-price" id="result-price">R$ 0</p>
-        <a class="result-cta" id="result-cta" href="#" target="_blank" rel="noopener">falar sobre esse pacote ↗</a>
+        <a class="result-cta" id="result-cta" href="#" target="_blank" rel="noopener">falar sobre esse pacote →</a>
         <button class="quiz-retry" id="quiz-retry">refazer o diagnóstico</button>
       </div>
     </div>
@@ -546,12 +629,12 @@
   <!-- CTA FINAL -->
   <section class="cta-final" id="contato">
     <h2>Vamos colocar seu negócio no mapa.</h2>
-    <a class="btn-primary" href="https://wa.me/5548991461739" target="_blank" rel="noopener">falar no whatsapp ↗</a>
+    <a class="btn-primary" href="https://wa.me/5548991461739" target="_blank" rel="noopener">falar no whatsapp →</a>
   </section>
 
 </div>
 
-<footer>klippy © 2026 — todos os direitos reservados</footer>
+<footer>klippy © 2026 — feito em florianópolis</footer>
 
 <script>
 (function(){
