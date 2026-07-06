@@ -153,8 +153,8 @@
 
       <label style="font-size:13px;color:var(--text-secondary);">Pacote</label>
       <select id="f-package" style="margin-bottom:10px;">
-        <option value="Presença">Presença — R$ 999</option>
-        <option value="Visibilidade">Visibilidade — R$ 1.500</option>
+        <option value="Presença">Presença — R$ 699</option>
+        <option value="Visibilidade">Visibilidade — R$ 999</option>
         <option value="Completo">Completo — R$ 2.999</option>
         <option value="Outro">Outro (valor personalizado)</option>
       </select>
@@ -222,7 +222,7 @@
   var currentAddons = [];
   var currentPeriod = 'mes';
   var currentStatusFilter = 'todos';
-  var PACKAGE_PRICES = { 'Presença': 999, 'Visibilidade': 1500, 'Completo': 2999 };
+  var PACKAGE_PRICES = { 'Presença': 699, 'Visibilidade': 999, 'Completo': 2999 };
 
   function fmt(n){ return 'R$ ' + Number(n||0).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}); }
   function uid(){ return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
