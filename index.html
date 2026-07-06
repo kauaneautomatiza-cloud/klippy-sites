@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klippy — presença online sem enrolação</title>
+<meta name="description" content="Sites, otimização de Google Meu Negócio e automação de WhatsApp pra quem vive do próprio trabalho.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0912;
+    --surface:#161222;
+    --surface-2:#1E1830;
+    --text:#F5F3FA;
+    --text-soft:#9E96B8;
+    --text-mute:#6E6688;
+    --accent:#8B5CF6;
+    --accent-2:#E879C8;
+    --line:rgba(255,255,255,0.10);
+    --y:#F2C94C;
+    --o:#F2994A;
+    --r:#EB5757;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{ font-family:'Space Grotesk', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+
+  .wrap{ max-width:920px; margin:0 auto; padding:0 24px; }
+  section{ padding:64px 0; }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:10;
+    background:rgba(11,9,18,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    max-width:920px; margin:0 auto; padding:18px 24px;
+  }
+  .logo{ font-family:'Space Grotesk', sans-serif; font-size:20px; font-weight:700; letter-spacing:-0.02em; }
+  .nav-links{ display:flex; gap:28px; list-style:none; }
+  .nav-links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--text-soft);
+    text-decoration:none;
+    transition:color .15s ease;
+  }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-toggle{ display:none; }
+
+  @media (max-width:680px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:80px 0 56px; text-align:center; }
+  .eyebrow{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--accent-2);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin-bottom:20px;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(32px, 5.5vw, 52px);
+    font-weight:700;
+    line-height:1.15;
+    letter-spacing:-0.02em;
+    max-width:680px;
+    margin:0 auto 20px;
+  }
+  h1 .accent{ color:var(--accent); }
+  .hero-sub{
+    color:var(--text-soft);
+    font-size:17px;
+    max-width:460px;
+    margin:0 auto 32px;
+  }
+  .btn-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-primary{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--accent); color:#fff;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+    padding:13px 22px;
+    text-decoration:none;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .btn-primary:hover{ opacity:0.9; }
+  .btn-secondary{
+    display:inline-flex; align-items:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+    padding:13px 22px;
+    text-decoration:none;
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:8px;
+    transition:border-color .15s ease;
+  }
+  .btn-secondary:hover{ border-color:var(--accent); }
+
+  /* ---------- pills ---------- */
+  .pills{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+    max-width:640px; margin:40px auto 0;
+  }
+  .pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    color:var(--text-soft);
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    padding:9px 16px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  /* ---------- section label ---------- */
+  .section-head{ text-align:center; margin-bottom:40px; }
+  .section-label{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--text-mute);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(24px, 4vw, 32px);
+    letter-spacing:-0.01em;
+    max-width:560px;
+    margin:0 auto;
+  }
+  p{ color:var(--text-soft); }
+
+  /* ---------- problema ---------- */
+  .problema{ text-align:center; }
+  .problema p{ max-width:480px; margin:16px auto 0; font-size:15px; }
+
+  /* ---------- pacotes ---------- */
+  .pacotes-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;
+  }
+  .pacote-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:28px 24px;
+    display:flex; flex-direction:column;
+  }
+  .pacote-card.featured{
+    border:2px solid var(--accent);
+    background:var(--surface-2);
+    position:relative;
+  }
+  .featured-badge{
+    position:absolute; top:-13px; left:24px;
+    background:var(--accent); color:#fff;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    padding:4px 12px;
+    border-radius:999px;
+  }
+  .pacote-name{ font-family:'Space Grotesk', sans-serif; font-size:19px; font-weight:700; margin-bottom:4px; }
+  .pacote-tag{ font-size:13px; color:var(--text-soft); margin-bottom:18px; }
+  .pacote-price{
+    font-family:'JetBrains Mono', monospace;
+    font-size:30px; font-weight:500;
+    margin-bottom:20px;
+  }
+  .pacote-price span{ font-size:13px; color:var(--text-mute); font-weight:400; }
+  .pacote-list{ list-style:none; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .pacote-list li{
+    font-size:13.5px; color:var(--text-soft);
+    padding-left:18px; position:relative;
+  }
+  .pacote-list li::before{
+    content:"—"; position:absolute; left:0; color:var(--accent-2);
+  }
+  .pacote-note{
+    text-align:center; font-size:13px; color:var(--text-mute);
+    margin-top:28px;
+  }
+
+  @media (max-width:760px){
+    .pacotes-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- trilha / como funciona ---------- */
+  .trilha{ position:relative; }
+  .trilha-track{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    position:relative;
+    margin-top:8px;
+  }
+  .trilha-line{
+    position:absolute; top:19px; left:0; right:0; height:2px;
+    background:var(--line);
+    z-index:0;
+  }
+  .trilha-node{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center;
+    flex:1;
+    padding:0 8px;
+  }
+  .node-circle{
+    width:40px; height:40px; border-radius:50%;
+    background:var(--surface);
+    border:2px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    margin-bottom:14px;
+    color:var(--text-soft);
+  }
+  .trilha-node.done .node-circle{
+    border-color:var(--accent); color:var(--accent);
+    background:var(--surface-2);
+  }
+  .trilha-node.final .node-circle{
+    background:var(--accent); border-color:var(--accent); color:#fff;
+  }
+  .node-title{ font-size:14px; font-weight:500; margin-bottom:4px; }
+  .node-desc{ font-size:12.5px; color:var(--text-soft); max-width:150px; }
+
+  @media (max-width:680px){
+    .trilha-track{ flex-direction:column; gap:28px; align-items:flex-start; }
+    .trilha-line{ display:none; }
+    .trilha-node{ flex-direction:row; text-align:left; padding:0; }
+    .node-circle{ margin-bottom:0; margin-right:16px; flex-shrink:0; }
+  }
+
+  /* ---------- quiz ---------- */
+  .quiz-box{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:32px;
+    max-width:560px;
+    margin:0 auto;
+  }
+  .quiz-progress{ height:3px; background:var(--surface-2); border-radius:2px; margin-bottom:26px; overflow:hidden; }
+  .quiz-progress-bar{ height:100%; width:0%; background:var(--accent); transition:width .3s ease; }
+  .quiz-step{ display:none; }
+  .quiz-step.active{ display:block; }
+  .quiz-question{ font-size:16px; margin-bottom:18px; font-weight:500; }
+  .quiz-options{ display:flex; flex-direction:column; gap:10px; }
+  .quiz-option{
+    text-align:left;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    padding:14px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .quiz-option:hover{ border-color:var(--accent); }
+
+  .quiz-result{ display:none; }
+  .quiz-result.active{ display:block; }
+  .result-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--text-soft);
+    margin-bottom:14px;
+  }
+  .result-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .result-title{ font-family:'Space Grotesk', sans-serif; font-size:22px; font-weight:700; margin-bottom:8px; }
+  .result-desc{ font-size:14.5px; color:var(--text-soft); margin-bottom:8px; }
+  .result-price{ font-family:'JetBrains Mono', monospace; font-size:15px; color:var(--accent-2); margin-bottom:22px; }
+  .result-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--accent); color:#fff;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+    padding:13px 20px;
+    text-decoration:none;
+    border-radius:8px;
+  }
+  .quiz-retry{
+    display:block; margin-top:18px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; color:var(--text-mute);
+    background:none; border:none; cursor:pointer;
+    text-decoration:underline;
+    padding:0;
+  }
+
+  /* ---------- prova ---------- */
+  .prova-box{
+    background:var(--surface);
+    border:1px dashed var(--line);
+    border-radius:16px;
+    padding:36px;
+    text-align:center;
+    max-width:480px; margin:0 auto;
+  }
+  .prova-badge{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--text-mute);
+    border:1px solid var(--line);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+
+  /* ---------- cta final ---------- */
+  .cta-final{ text-align:center; }
+  .cta-final h2{ margin-bottom:24px; }
+
+  footer{
+    text-align:center;
+    padding:32px 24px 48px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--text-mute);
+    border-top:1px solid var(--line);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">Klippy</div>
+    <ul class="nav-links">
+      <li><a href="#como-funciona">como funciona</a></li>
+      <li><a href="#pacotes">pacotes</a></li>
+      <li><a href="#diagnostico">diagnóstico</a></li>
+      <li><a href="#contato">contato</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="eyebrow">sites e presença online sob medida</span>
+    <h1>Com a Klippy, <span class="accent">seu trabalho</span> aparece do jeito que merece.</h1>
+    <p class="hero-sub">Site profissional, Google otimizado e menos tempo perdido respondendo a mesma coisa no WhatsApp.</p>
+    <div class="btn-row">
+      <a class="btn-primary" href="#diagnostico">fazer diagnóstico ↗</a>
+      <a class="btn-secondary" href="#pacotes">ver pacotes</a>
+    </div>
+    <div class="pills">
+      <span class="pill">site one-page responsivo</span>
+      <span class="pill">domínio configurado</span>
+      <span class="pill">otimização google meu negócio</span>
+      <span class="pill">automação de whatsapp</span>
+      <span class="pill">atualização grátis em 15 dias</span>
+      <span class="pill">suporte direto com você</span>
+    </div>
+  </div>
+
+  <!-- PROBLEMA -->
+  <section class="problema">
+    <div class="section-head">
+      <h2>Quem tem site aparece primeiro no Google.</h2>
+      <p>Quem não tem, perde cliente todo dia — pra quem apareceu primeiro na busca.</p>
+    </div>
+  </section>
+
+  <!-- PACOTES -->
+  <section id="pacotes">
+    <div class="section-head">
+      <span class="section-label">pacotes</span>
+      <h2>Escolha o formato que faz sentido agora</h2>
+    </div>
+
+    <div class="pacotes-grid">
+      <div class="pacote-card">
+        <div class="pacote-name">Presença</div>
+        <div class="pacote-tag">Seu primeiro passo pra existir online</div>
+        <div class="pacote-price">R$ 699</div>
+        <ul class="pacote-list">
+          <li>Site one-page sob medida, a partir do seu briefing</li>
+          <li>Domínio configurado</li>
+          <li>Botão de contato direto via WhatsApp</li>
+          <li>1 atualização grátis em até 15 dias</li>
+        </ul>
+      </div>
+
+      <div class="pacote-card featured">
+        <span class="featured-badge">mais escolhido</span>
+        <div class="pacote-name">Visibilidade</div>
+        <div class="pacote-tag">Presença + ser encontrado</div>
+        <div class="pacote-price">R$ 999</div>
+        <ul class="pacote-list">
+          <li>Tudo do Pacote Presença</li>
+          <li>Otimização completa do Google Meu Negócio</li>
+          <li>Orientação pra pedir e responder avaliações</li>
+          <li>1 atualização grátis em até 15 dias</li>
+        </ul>
+      </div>
+
+      <div class="pacote-card">
+        <div class="pacote-name">Completo</div>
+        <div class="pacote-tag">Presença + visibilidade + tempo de volta</div>
+        <div class="pacote-price">R$ 2.999</div>
+        <ul class="pacote-list">
+          <li>Tudo do Pacote Visibilidade</li>
+          <li>Automação de respostas no WhatsApp</li>
+          <li>Inclui 1º ano de plataforma de automação</li>
+          <li>1 atualização grátis em até 15 dias</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="pacote-note">Precisa de mais ajustes depois da atualização grátis? Em breve, planos de manutenção mensal.</p>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section id="como-funciona">
+    <div class="section-head">
+      <span class="section-label">como funciona</span>
+      <h2>Do briefing ao site no ar</h2>
+    </div>
+    <div class="trilha">
+      <div class="trilha-track">
+        <div class="trilha-line"></div>
+        <div class="trilha-node done">
+          <div class="node-circle">01</div>
+          <div class="node-title">Briefing</div>
+          <div class="node-desc">Você me conta sobre seu trabalho — por WhatsApp ou formulário, do jeito que for melhor pra sua rotina.</div>
+        </div>
+        <div class="trilha-node done">
+          <div class="node-circle">02</div>
+          <div class="node-title">Desenvolvimento</div>
+          <div class="node-desc">Eu monto tudo enquanto você segue sua rotina.</div>
+        </div>
+        <div class="trilha-node done">
+          <div class="node-circle">03</div>
+          <div class="node-title">Entrega</div>
+          <div class="node-desc">Site no ar, testado, pronto pra receber cliente.</div>
+        </div>
+        <div class="trilha-node final">
+          <div class="node-circle">✓</div>
+          <div class="node-title">Site pronto</div>
+          <div class="node-desc">Sua presença online, funcionando.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="diagnostico">
+    <div class="section-head">
+      <span class="section-label">diagnóstico rápido</span>
+      <h2>Qual pacote combina com você agora?</h2>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-progress-bar"></div></div>
+
+      <div class="quiz-step active" data-step="0">
+        <p class="quiz-question">Quando alguém procura seu serviço no Google, te encontra?</p>
+        <div class="quiz-options">
+          <button class="quiz-option" data-axis="presenca" data-score="0">Sim, tenho site e apareço bem</button>
+          <button class="quiz-option" data-axis="presenca" data-score="2">Tenho perfil no Google mas sem site</button>
+          <button class="quiz-option" data-axis="presenca" data-score="3">Não apareço em nada</button>
+        </div>
+      </div>
+
+      <div class="quiz-step" data-step="1">
+        <p class="quiz-question">Como seus clientes entram em contato pra pedir orçamento?</p>
+        <div class="quiz-options">
+          <button class="quiz-option" data-axis="visibilidade" data-score="3">Me acham no Instagram e mandam DM</button>
+          <button class="quiz-option" data-axis="visibilidade" data-score="1">Pedem pelo WhatsApp mas respondo tudo manual</button>
+          <button class="quiz-option" data-axis="visibilidade" data-score="0">Tenho um processo organizado</button>
+        </div>
+      </div>
+
+      <div class="quiz-step" data-step="2">
+        <p class="quiz-question">Quanto tempo você gasta por semana respondendo a mesma coisa no WhatsApp?</p>
+        <div class="quiz-options">
+          <button class="quiz-option" data-axis="completo" data-score="0">Menos de 1 hora</button>
+          <button class="quiz-option" data-axis="completo" data-score="1">Entre 1 e 3 horas</button>
+          <button class="quiz-option" data-axis="completo" data-score="3">Mais de 3 horas, é cansativo</button>
+        </div>
+      </div>
+
+      <div class="quiz-result" id="quiz-result">
+        <div class="result-badge"><span class="result-dot" id="result-dot"></span><span id="result-label">perfil</span></div>
+        <p class="result-title" id="result-title">título</p>
+        <p class="result-desc" id="result-desc">descrição</p>
+        <p class="result-price" id="result-price">R$ 0</p>
+        <a class="result-cta" id="result-cta" href="#" target="_blank" rel="noopener">falar sobre esse pacote ↗</a>
+        <button class="quiz-retry" id="quiz-retry">refazer o diagnóstico</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROVA -->
+  <section>
+    <div class="section-head">
+      <span class="section-label">prova</span>
+      <h2>Cases entregues</h2>
+    </div>
+    <div class="prova-box">
+      <span class="prova-badge">em breve</span>
+      <p>Primeiro case entregue e validado com cliente real — o depoimento completo chega aqui assim que estiver pronto.</p>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final" id="contato">
+    <h2>Vamos colocar seu negócio no mapa.</h2>
+    <a class="btn-primary" href="https://wa.me/5548991461739" target="_blank" rel="noopener">falar no whatsapp ↗</a>
+  </section>
+
+</div>
+
+<footer>klippy © 2026 — feito em florianópolis</footer>
+
+<script>
+(function(){
+  var steps = document.querySelectorAll('.quiz-step');
+  var progressBar = document.getElementById('quiz-progress-bar');
+  var resultPanel = document.getElementById('quiz-result');
+  var currentStep = 0;
+  var scores = { presenca: 0, visibilidade: 0, completo: 0 };
+  var WHATS_NUMBER = '5548991461739';
+
+  var profiles = {
+    presenca: {
+      color: 'var(--y)',
+      label: 'perfil presença',
+      title: 'Você precisa do Pacote Presença',
+      desc: 'Seu primeiro passo é existir online: site profissional pra você parar de depender só do boca a boca.',
+      price: 'R$ 699',
+      whatsappMsg: 'Fiz o diagnóstico no site e o resultado indicou o Pacote Presença — quero saber mais.'
+    },
+    visibilidade: {
+      color: 'var(--o)',
+      label: 'perfil visibilidade',
+      title: 'Você precisa do Pacote Visibilidade',
+      desc: 'Você já tem alguma presença, mas ainda perde cliente por falta de um processo organizado de contato.',
+      price: 'R$ 999',
+      whatsappMsg: 'Fiz o diagnóstico no site e o resultado indicou o Pacote Visibilidade — quero saber mais.'
+    },
+    completo: {
+      color: 'var(--r)',
+      label: 'perfil completo',
+      title: 'Você precisa do Pacote Completo',
+      desc: 'Você está trabalhando mais do que deveria. Automação de WhatsApp + site profissional pra você ter seu tempo de volta.',
+      price: 'R$ 2.999',
+      whatsappMsg: 'Fiz o diagnóstico no site e o resultado indicou o Pacote Completo — quero saber mais.'
+    }
+  };
+
+  function updateProgress(){
+    var pct = (currentStep / steps.length) * 100;
+    progressBar.style.width = pct + '%';
+  }
+
+  function goToStep(index){
+    steps.forEach(function(step){
+      step.classList.toggle('active', parseInt(step.dataset.step, 10) === index);
+    });
+    currentStep = index;
+    updateProgress();
+  }
+
+  function showResult(){
+    steps.forEach(function(step){ step.classList.remove('active'); });
+    progressBar.style.width = '100%';
+
+    var priority = ['presenca', 'visibilidade', 'completo'];
+    var winner = priority[0];
+    priority.forEach(function(key){
+      if(scores[key] > scores[winner]) winner = key;
+    });
+
+    var profile = profiles[winner];
+    document.getElementById('result-dot').style.background = profile.color;
+    document.getElementById('result-label').textContent = profile.label;
+    document.getElementById('result-title').textContent = profile.title;
+    document.getElementById('result-desc').textContent = profile.desc;
+    document.getElementById('result-price').textContent = profile.price;
+    document.getElementById('result-cta').href = 'https://wa.me/' + WHATS_NUMBER + '?text=' + encodeURIComponent(profile.whatsappMsg);
+    resultPanel.classList.add('active');
+  }
+
+  document.querySelectorAll('.quiz-option').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var axis = btn.dataset.axis;
+      var score = parseInt(btn.dataset.score, 10);
+      scores[axis] += score;
+
+      if(currentStep < steps.length - 1){
+        goToStep(currentStep + 1);
+      } else {
+        showResult();
+      }
+    });
+  });
+
+  document.getElementById('quiz-retry').addEventListener('click', function(){
+    scores = { presenca: 0, visibilidade: 0, completo: 0 };
+    resultPanel.classList.remove('active');
+    goToStep(0);
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>
