@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klippy — Painel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
+<style>
+  :root{
+    --surface-0:#f1efe8;
+    --surface-1:#f5f4f1;
+    --surface-2:#ffffff;
+    --border:#e0ddd5;
+    --border-strong:#c9c5ba;
+    --border-danger:#e24b4a;
+    --text-primary:#1a1a1a;
+    --text-secondary:#6b6660;
+    --text-muted:#98948c;
+    --text-danger:#a32d2d;
+    --text-success:#27500a;
+    --fill-primary:#1a1a1a;
+    --on-primary:#ffffff;
+    --radius:8px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--surface-0);
+    color:var(--text-primary);
+    font-family:var(--font-sans);
+    padding:24px;
+  }
+  .app{ max-width:720px; margin:0 auto; }
+  h1{ font-size:20px; font-weight:600; margin:0 0 1rem; }
+  button{
+    font-family:inherit; font-size:14px; cursor:pointer;
+    border:0.5px solid var(--border-strong);
+    background:transparent;
+    border-radius:var(--radius);
+    padding:8px 14px;
+    color:var(--text-primary);
+  }
+  button:hover{ background:var(--surface-1); }
+  button:active{ transform:scale(0.98); }
+  input, select, textarea{
+    font-family:inherit; font-size:14px;
+    border:0.5px solid var(--border);
+    border-radius:var(--radius);
+    padding:8px 10px;
+    background:var(--surface-2);
+    color:var(--text-primary);
+    width:100%;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--border-strong);
+    box-shadow:0 0 0 2px rgba(0,0,0,0.06);
+  }
+  label{ display:block; }
+  #login-view{
+    max-width:360px; margin:80px auto 0; background:var(--surface-2);
+    border:0.5px solid var(--border); border-radius:12px; padding:1.75rem;
+  }
+  #login-error{ color:var(--text-danger); font-size:13px; margin:8px 0 0; display:none; }
+</style>
+</head>
+<body>
+
+<div id="login-view">
+  <h1 style="margin-bottom:1.25rem;">Entrar no painel</h1>
+  <label style="font-size:13px;color:var(--text-secondary);">E-mail</label>
+  <input id="login-email" type="email" placeholder="voce@email.com" style="margin-bottom:10px;">
+  <label style="font-size:13px;color:var(--text-secondary);">Senha</label>
+  <input id="login-password" type="password" placeholder="••••••••" style="margin-bottom:14px;">
+  <button id="login-btn" style="width:100%;background:var(--fill-primary);color:var(--on-primary);border:none;">Entrar</button>
+  <p id="login-error">E-mail ou senha incorretos.</p>
+</div>
+
+<div class="app" id="app-view" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <h1 style="margin:0;">Painel — Klippy</h1>
+    <button id="logout-btn" style="font-size:13px;">Sair</button>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
+    <div style="display:flex;gap:8px;">
+      <button id="tab-dash" style="border-color:var(--border-strong);background:var(--surface-1);">Receita</button>
+      <button id="tab-clients">Clientes</button>
+    </div>
+    <button id="btn-add">+ Novo</button>
+  </div>
+
+  <div id="view-dash">
+    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+      <button class="period-btn" data-p="hoje" style="font-size:13px;padding:6px 12px;">Hoje</button>
+      <button class="period-btn" data-p="mes" style="font-size:13px;padding:6px 12px;">Mês</button>
+      <button class="period-btn" data-p="90d" style="font-size:13px;padding:6px 12px;">90 dias</button>
+      <button class="period-btn" data-p="ano" style="font-size:13px;padding:6px 12px;">Ano</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.25rem;">
+      <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;">
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 4px;" id="period-label">Receita do mês</p>
+        <p id="m-period" style="font-size:24px;font-weight:600;margin:0;font-family:var(--font-mono);">R$ 0</p>
+      </div>
+      <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;">
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 4px;">Recorrência mensal ativa</p>
+        <p id="m-mrr" style="font-size:24px;font-weight:600;margin:0;font-family:var(--font-mono);">R$ 0</p>
+      </div>
+      <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;">
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 4px;">Clientes ativos</p>
+        <p id="m-active" style="font-size:24px;font-weight:600;margin:0;font-family:var(--font-mono);">0</p>
+      </div>
+      <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;">
+        <p style="font-size:13px;color:var(--text-secondary);margin:0 0 4px;">Leads</p>
+        <p id="m-leads" style="font-size:24px;font-weight:600;margin:0;font-family:var(--font-mono);">0</p>
+      </div>
+    </div>
+
+    <div style="position:relative;width:100%;height:280px;margin-bottom:0.5rem;background:var(--surface-2);border-radius:var(--radius);border:0.5px solid var(--border);padding:12px;">
+      <canvas id="revChart" role="img" aria-label="Gráfico de receita entregue no período selecionado, incluindo serviços recorrentes">Receita por período.</canvas>
+    </div>
+  </div>
+
+  <div id="view-clients" style="display:none;">
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <button class="status-filter-btn" data-s="todos" style="font-size:13px;padding:6px 12px;">Todos</button>
+      <button class="status-filter-btn" data-s="Cliente" style="font-size:13px;padding:6px 12px;">Ativos</button>
+      <button class="status-filter-btn" data-s="Lead" style="font-size:13px;padding:6px 12px;">Leads</button>
+    </div>
+    <div id="client-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <p id="empty-msg" style="display:none;color:var(--text-muted);font-size:14px;padding:2rem 0;text-align:center;">Nenhum cliente ainda. Toque em "+ Novo" pra cadastrar o primeiro.</p>
+  </div>
+</div>
+
+<div id="modal-overlay" style="display:none;">
+  <div style="position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:10;padding:1rem;">
+    <div style="background:var(--surface-2);border-radius:12px;border:0.5px solid var(--border);padding:1.25rem;width:100%;max-width:440px;max-height:88vh;overflow:auto;">
+      <p style="font-size:16px;font-weight:600;margin:0 0 12px;" id="modal-title">Novo cliente</p>
+
+      <label style="font-size:13px;color:var(--text-secondary);">Nome do cliente</label>
+      <input id="f-name" type="text" placeholder="Nome da pessoa" style="margin-bottom:10px;">
+
+      <label style="font-size:13px;color:var(--text-secondary);">Empresa / nome do negócio</label>
+      <input id="f-business" type="text" placeholder="Ex: Go Gab Personal Chef" style="margin-bottom:10px;">
+
+      <label style="font-size:13px;color:var(--text-secondary);">Telefone (WhatsApp)</label>
+      <input id="f-phone" type="text" placeholder="48912345678" style="margin-bottom:10px;">
+
+      <label style="font-size:13px;color:var(--text-secondary);">E-mail</label>
+      <input id="f-email" type="email" placeholder="nome@email.com" style="margin-bottom:10px;">
+
+      <label style="font-size:13px;color:var(--text-secondary);">Pacote</label>
+      <select id="f-package" style="margin-bottom:10px;">
+        <option value="Presença">Presença — R$ 999</option>
+        <option value="Visibilidade">Visibilidade — R$ 1.500</option>
+        <option value="Completo">Completo — R$ 2.999</option>
+        <option value="Outro">Outro (valor personalizado)</option>
+      </select>
+
+      <label style="font-size:13px;color:var(--text-secondary);">Valor do pacote (R$)</label>
+      <input id="f-value" type="number" step="0.01" style="margin-bottom:10px;">
+
+      <label style="font-size:13px;color:var(--text-secondary);">Status</label>
+      <select id="f-status" style="margin-bottom:10px;">
+        <option value="Lead">Lead</option>
+        <option value="Cliente">Cliente ativo</option>
+      </select>
+
+      <div id="follow-up-wrap" style="margin-bottom:10px;">
+        <label style="font-size:13px;color:var(--text-secondary);">Próximo contato</label>
+        <input id="f-followup" type="date">
+      </div>
+
+      <label style="display:flex;align-items:center;gap:8px;margin-bottom:14px;cursor:pointer;">
+        <input id="f-entregue" type="checkbox" style="width:auto;">
+        <span style="font-size:14px;">Projeto entregue</span>
+      </label>
+
+      <div id="date-wrap" style="margin-bottom:16px;display:none;">
+        <label style="font-size:13px;color:var(--text-secondary);">Data de entrega</label>
+        <input id="f-date" type="date">
+      </div>
+
+      <div style="border-top:0.5px solid var(--border);padding-top:12px;margin-bottom:12px;">
+        <p style="font-size:14px;font-weight:600;margin:0 0 8px;">Serviços adicionais / upsell</p>
+        <div id="addons-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
+
+        <div style="display:flex;gap:6px;margin-bottom:6px;">
+          <input id="addon-name" type="text" placeholder="Ex: Manutenção mensal, Google Meu Negócio" style="flex:2;">
+          <input id="addon-value" type="number" placeholder="Valor" style="flex:1;">
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+            <input id="addon-recurring" type="checkbox" style="width:auto;"> Recorrente (mensal)
+          </label>
+          <input id="addon-date" type="date" style="flex:1;">
+        </div>
+        <button id="addon-add-btn" type="button" style="width:100%;font-size:13px;">+ Adicionar serviço</button>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button id="btn-delete" style="border-color:var(--border-danger);color:var(--text-danger);display:none;">Excluir</button>
+        <button id="btn-cancel">Cancelar</button>
+        <button id="btn-save" style="background:var(--fill-primary);color:var(--on-primary);border:none;">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  var SUPABASE_URL = 'https://bcsoqadonxscdhbxrdmc.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_9s7cdcPrZ9W4hluY89XtLQ_6kPIqx4L';
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  var clients = [];
+  var editingId = null;
+  var currentAddons = [];
+  var currentPeriod = 'mes';
+  var currentStatusFilter = 'todos';
+  var PACKAGE_PRICES = { 'Presença': 999, 'Visibilidade': 1500, 'Completo': 2999 };
+
+  function fmt(n){ return 'R$ ' + Number(n||0).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}); }
+  function uid(){ return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+  function toDateObj(s){ return s ? new Date(s + 'T00:00:00') : null; }
+  function dateKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function todayStr(){ return dateKey(new Date()); }
+
+  async function checkSession(){
+    var { data } = await sb.auth.getSession();
+    if (data.session) { showApp(); loadClients(); }
+    else { showLogin(); }
+  }
+  function showLogin(){
+    document.getElementById('login-view').style.display = 'block';
+    document.getElementById('app-view').style.display = 'none';
+  }
+  function showApp(){
+    document.getElementById('login-view').style.display = 'none';
+    document.getElementById('app-view').style.display = 'block';
+  }
+  document.getElementById('login-btn').onclick = async function(){
+    var email = document.getElementById('login-email').value.trim();
+    var password = document.getElementById('login-password').value;
+    document.getElementById('login-error').style.display = 'none';
+    var { error } = await sb.auth.signInWithPassword({ email: email, password: password });
+    if (error) { document.getElementById('login-error').style.display = 'block'; return; }
+    showApp();
+    loadClients();
+  };
+  document.getElementById('logout-btn').onclick = async function(){
+    await sb.auth.signOut();
+    showLogin();
+  };
+
+  async function loadClients(){
+    var { data, error } = await sb.from('clientes').select('*');
+    if (error) { console.error(error); alert('Erro ao carregar dados: ' + error.message); return; }
+    clients = (data || []).map(function(row){ row.addons = row.addons || []; return row; });
+    render();
+  }
+  async function upsertClient(payload){
+    var { error } = await sb.from('clientes').upsert(payload);
+    if (error) { alert('Erro ao salvar: ' + error.message); return false; }
+    return true;
+  }
+  async function deleteClientRemote(id){
+    var { error } = await sb.from('clientes').delete().eq('id', id);
+    if (error) { alert('Erro ao excluir: ' + error.message); return false; }
+    return true;
+  }
+
+  function allRevenueEntries(){
+    var entries = [];
+    clients.forEach(function(c){
+      if (c.entregue && c.date) entries.push({ date: c.date, value: Number(c.value||0) });
+      (c.addons||[]).forEach(function(a){
+        if (!a.recurring) {
+          if (a.date) entries.push({ date: a.date, value: Number(a.value||0) });
+        } else if (a.active && a.date) {
+          var start = toDateObj(a.date);
+          var now = new Date();
+          var cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+          var guard = 0;
+          while (cursor <= now && guard < 120) {
+            entries.push({ date: dateKey(cursor), value: Number(a.value||0) });
+            cursor.setMonth(cursor.getMonth()+1);
+            guard++;
+          }
+        }
+      });
+    });
+    return entries;
+  }
+
+  function currentMRR(){
+    var total = 0;
+    clients.forEach(function(c){
+      (c.addons||[]).forEach(function(a){ if (a.recurring && a.active) total += Number(a.value||0); });
+    });
+    return total;
+  }
+
+  function sumInRange(entries, start, end){
+    return entries.filter(function(e){ var d = toDateObj(e.date); return d >= start && d <= end; }).reduce(function(s,e){ return s + e.value; }, 0);
+  }
+
+  var PERIOD_LABELS = { hoje: 'Receita hoje', mes: 'Receita do mês', '90d': 'Receita 90 dias', ano: 'Receita do ano' };
+
+  function renderMetrics(){
+    var now = new Date();
+    var start;
+    if (currentPeriod === 'hoje') start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    else if (currentPeriod === 'mes') start = new Date(now.getFullYear(), now.getMonth(), 1);
+    else if (currentPeriod === '90d') { start = new Date(now); start.setDate(start.getDate() - 90); }
+    else start = new Date(now.getFullYear(), 0, 1);
+    var end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+
+    var entries = allRevenueEntries();
+    document.getElementById('period-label').textContent = PERIOD_LABELS[currentPeriod];
+    document.getElementById('m-period').textContent = fmt(sumInRange(entries, start, end));
+    document.getElementById('m-mrr').textContent = fmt(currentMRR());
+    document.getElementById('m-active').textContent = clients.filter(function(c){ return c.status === 'Cliente'; }).length;
+    document.getElementById('m-leads').textContent = clients.filter(function(c){ return c.status === 'Lead'; }).length;
+  }
+
+  var chartInstance = null;
+  function renderChart(){
+    var now = new Date();
+    var labels = [], data = [];
+    var entries = allRevenueEntries();
+
+    function sumDay(key){ return entries.filter(function(e){ return e.date === key; }).reduce(function(s,e){ return s+e.value; },0); }
+
+    if (currentPeriod === 'hoje') {
+      for (var i = 6; i >= 0; i--){
+        var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+        labels.push(String(d.getDate())+'/'+String(d.getMonth()+1));
+        data.push(sumDay(dateKey(d)));
+      }
+    } else if (currentPeriod === 'mes') {
+      var daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+      for (var dnum = 1; dnum <= daysInMonth; dnum++){
+        labels.push(String(dnum));
+        data.push(sumDay(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(dnum).padStart(2,'0')));
+      }
+    } else if (currentPeriod === '90d') {
+      for (var w = 12; w >= 0; w--){
+        var wEnd = new Date(now); wEnd.setDate(wEnd.getDate() - (w*7));
+        var wStart = new Date(wEnd); wStart.setDate(wStart.getDate() - 6);
+        labels.push(String(wStart.getDate())+'/'+String(wStart.getMonth()+1));
+        data.push(sumInRange(entries, wStart, wEnd));
+      }
+    } else {
+      var names = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+      for (var m = 11; m >= 0; m--){
+        var md = new Date(now.getFullYear(), now.getMonth() - m, 1);
+        var mKey = md.getFullYear()+'-'+String(md.getMonth()+1).padStart(2,'0');
+        labels.push(names[md.getMonth()]+'/'+String(md.getFullYear()).slice(2));
+        data.push(entries.filter(function(e){ return e.date.slice(0,7) === mKey; }).reduce(function(s,e){ return s+e.value; },0));
+      }
+    }
+
+    var ctx = document.getElementById('revChart');
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ label: 'Receita', data: data, backgroundColor: '#2a78d6', borderRadius: 3, maxBarThickness: 28 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx){ return fmt(ctx.parsed.y); } } } },
+        scales: {
+          y: { beginAtZero: true, ticks: { callback: function(v){ return fmt(v); }, color: '#898781' }, grid: { color: '#e1e0d9' } },
+          x: { ticks: { color: '#898781', autoSkip: true, maxRotation: 0 }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  function escapeHtml(s){ var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  function waLink(phone){
+    var digits = (phone||'').replace(/\D/g,'');
+    if (!digits) return null;
+    if (digits.length <= 11) digits = '55' + digits;
+    return 'https://wa.me/' + digits;
+  }
+
+  function renderClientList(){
+    var list = document.getElementById('client-list');
+    var filtered = clients.filter(function(c){ return currentStatusFilter === 'todos' || c.status === currentStatusFilter; });
+    filtered.sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+    list.innerHTML = '';
+    document.getElementById('empty-msg').style.display = clients.length === 0 ? 'block' : 'none';
+
+    filtered.forEach(function(c){
+      var isActive = c.status === 'Cliente';
+      var badgeBg = isActive ? '#eaf3de' : '#faeeda';
+      var badgeText = isActive ? '#173404' : '#412402';
+      var wa = waLink(c.phone);
+      var activeAddons = (c.addons||[]).filter(function(a){ return a.recurring && a.active; }).length;
+      var row = document.createElement('div');
+      row.style.cssText = 'border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface-2);';
+      row.innerHTML =
+        '<div style="min-width:0;flex:1;cursor:pointer;" class="row-open">' +
+          '<p style="font-weight:600;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(c.name || 'Sem nome') + '</p>' +
+          '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(c.business || '') + (c.package ? ' · ' + escapeHtml(c.package) : '') + (activeAddons ? ' · ' + activeAddons + ' recorrência' + (activeAddons>1?'s':'') : '') + '</p>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
+          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:18px;"></i></a>' : '') +
+          '<span style="font-size:12px;padding:3px 10px;border-radius:var(--radius);background:'+badgeBg+';color:'+badgeText+';">'+(isActive?'Cliente':'Lead')+'</span>' +
+          (c.entregue ? '<i class="ti ti-check" style="font-size:16px;color:var(--text-success);" aria-label="Entregue"></i>' : '') +
+        '</div>';
+      row.querySelector('.row-open').onclick = function(){ openModal(c.id); };
+      list.appendChild(row);
+    });
+  }
+
+  function render(){ renderMetrics(); renderChart(); renderClientList(); }
+
+  function renderAddonsList(){
+    var wrap = document.getElementById('addons-list');
+    wrap.innerHTML = '';
+    currentAddons.forEach(function(a, idx){
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;background:var(--surface-1);border-radius:var(--radius);padding:6px 10px;font-size:13px;';
+      row.innerHTML =
+        '<span>' + escapeHtml(a.name) + ' — ' + fmt(a.value) + (a.recurring ? ' /mês' : '') + '</span>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          (a.recurring ? '<label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" class="addon-active-cb" data-idx="'+idx+'" '+(a.active?'checked':'')+' style="width:auto;">ativo</label>' : '') +
+          '<button type="button" class="addon-remove-btn" data-idx="'+idx+'" style="font-size:12px;padding:2px 8px;">remover</button>' +
+        '</div>';
+      wrap.appendChild(row);
+    });
+    wrap.querySelectorAll('.addon-remove-btn').forEach(function(btn){
+      btn.onclick = function(){ currentAddons.splice(parseInt(this.dataset.idx,10),1); renderAddonsList(); };
+    });
+    wrap.querySelectorAll('.addon-active-cb').forEach(function(cb){
+      cb.onchange = function(){ currentAddons[parseInt(this.dataset.idx,10)].active = this.checked; };
+    });
+  }
+
+  document.getElementById('addon-add-btn').onclick = function(){
+    var name = document.getElementById('addon-name').value.trim();
+    var value = parseFloat(document.getElementById('addon-value').value) || 0;
+    var recurring = document.getElementById('addon-recurring').checked;
+    var date = document.getElementById('addon-date').value || todayStr();
+    if (!name || !value) return;
+    currentAddons.push({ id: uid(), name: name, value: value, recurring: recurring, active: true, date: date });
+    document.getElementById('addon-name').value = '';
+    document.getElementById('addon-value').value = '';
+    document.getElementById('addon-recurring').checked = false;
+    document.getElementById('addon-date').value = '';
+    renderAddonsList();
+  };
+
+  function toggleConditionalFields(){
+    var status = document.getElementById('f-status').value;
+    document.getElementById('follow-up-wrap').style.display = status === 'Lead' ? 'block' : 'none';
+    var entregue = document.getElementById('f-entregue').checked;
+    document.getElementById('date-wrap').style.display = entregue ? 'block' : 'none';
+  }
+
+  function openModal(id){
+    editingId = id || null;
+    var c = id ? clients.find(function(x){ return x.id === id; }) : null;
+    currentAddons = c ? JSON.parse(JSON.stringify(c.addons||[])) : [];
+    document.getElementById('modal-title').textContent = c ? 'Editar cliente' : 'Novo cliente';
+    document.getElementById('f-name').value = c ? c.name : '';
+    document.getElementById('f-business').value = c ? c.business : '';
+    document.getElementById('f-phone').value = c ? c.phone : '';
+    document.getElementById('f-email').value = c ? c.email : '';
+    document.getElementById('f-package').value = c ? c.package : 'Presença';
+    document.getElementById('f-value').value = c ? c.value : PACKAGE_PRICES['Presença'];
+    document.getElementById('f-status').value = c ? c.status : 'Lead';
+    document.getElementById('f-followup').value = c ? (c.followup||'') : '';
+    document.getElementById('f-entregue').checked = c ? !!c.entregue : false;
+    document.getElementById('f-date').value = c ? (c.date || todayStr()) : todayStr();
+    document.getElementById('btn-delete').style.display = c ? 'inline-block' : 'none';
+    renderAddonsList();
+    toggleConditionalFields();
+    document.getElementById('modal-overlay').style.display = 'block';
+  }
+  function closeModal(){ document.getElementById('modal-overlay').style.display = 'none'; editingId = null; currentAddons = []; }
+
+  document.getElementById('btn-add').onclick = function(){ openModal(null); };
+  document.getElementById('btn-cancel').onclick = closeModal;
+  document.getElementById('f-package').onchange = function(){
+    if (PACKAGE_PRICES[this.value] !== undefined) document.getElementById('f-value').value = PACKAGE_PRICES[this.value];
+  };
+  document.getElementById('f-status').onchange = toggleConditionalFields;
+  document.getElementById('f-entregue').onchange = toggleConditionalFields;
+
+  document.getElementById('btn-save').onclick = async function(){
+    var name = document.getElementById('f-name').value.trim();
+    if (!name) { document.getElementById('f-name').focus(); return; }
+    var payload = {
+      id: editingId || uid(),
+      name: name,
+      business: document.getElementById('f-business').value.trim(),
+      phone: document.getElementById('f-phone').value.trim(),
+      email: document.getElementById('f-email').value.trim(),
+      package: document.getElementById('f-package').value,
+      value: parseFloat(document.getElementById('f-value').value) || 0,
+      status: document.getElementById('f-status').value,
+      followup: document.getElementById('f-followup').value || null,
+      entregue: document.getElementById('f-entregue').checked,
+      date: document.getElementById('f-entregue').checked ? (document.getElementById('f-date').value || null) : null,
+      addons: currentAddons
+    };
+    var ok = await upsertClient(payload);
+    if (!ok) return;
+    closeModal();
+    await loadClients();
+  };
+  document.getElementById('btn-delete').onclick = async function(){
+    var ok = await deleteClientRemote(editingId);
+    if (!ok) return;
+    closeModal();
+    await loadClients();
+  };
+
+  document.querySelectorAll('.period-btn').forEach(function(btn){
+    btn.onclick = function(){
+      currentPeriod = this.dataset.p;
+      document.querySelectorAll('.period-btn').forEach(function(b){ b.style.background='transparent'; b.style.borderColor='var(--border)'; });
+      this.style.background = 'var(--surface-1)'; this.style.borderColor = 'var(--border-strong)';
+      renderMetrics(); renderChart();
+    };
+  });
+  document.querySelectorAll('.status-filter-btn').forEach(function(btn){
+    btn.onclick = function(){
+      currentStatusFilter = this.dataset.s;
+      document.querySelectorAll('.status-filter-btn').forEach(function(b){ b.style.background='transparent'; b.style.borderColor='var(--border)'; });
+      this.style.background = 'var(--surface-1)'; this.style.borderColor = 'var(--border-strong)';
+      renderClientList();
+    };
+  });
+  document.querySelector('.period-btn[data-p="mes"]').style.background = 'var(--surface-1)';
+  document.querySelector('.period-btn[data-p="mes"]').style.borderColor = 'var(--border-strong)';
+  document.querySelector('.status-filter-btn[data-s="todos"]').style.background = 'var(--surface-1)';
+  document.querySelector('.status-filter-btn[data-s="todos"]').style.borderColor = 'var(--border-strong)';
+
+  document.getElementById('tab-dash').onclick = function(){
+    document.getElementById('view-dash').style.display = 'block';
+    document.getElementById('view-clients').style.display = 'none';
+    this.style.background = 'var(--surface-1)'; this.style.borderColor = 'var(--border-strong)';
+    var ct = document.getElementById('tab-clients'); ct.style.background = 'transparent'; ct.style.borderColor = 'var(--border)';
+    renderChart();
+  };
+  document.getElementById('tab-clients').onclick = function(){
+    document.getElementById('view-dash').style.display = 'none';
+    document.getElementById('view-clients').style.display = 'block';
+    this.style.background = 'var(--surface-1)'; this.style.borderColor = 'var(--border-strong)';
+    var dt = document.getElementById('tab-dash'); dt.style.background = 'transparent'; dt.style.borderColor = 'var(--border)';
+  };
+
+  checkSession();
+})();
+</script>
+</body>
+</html>
