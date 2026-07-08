@@ -518,8 +518,6 @@ function socialLabel(url){
     if (url.indexOf('linktr.ee') > -1) return 'Linktree';
     return 'Ver perfil';
   }
-
-  function socialIcon(url){
   function socialIcon(url){
     if (!url) return 'link';
     if (url.indexOf('instagram.com') > -1) return 'instagram';
@@ -760,7 +758,7 @@ function socialLabel(url){
   updateClock();
   setInterval(updateClock, 15000);
 
-  checkSession();
+ checkSession();
 })();
 </script>
 </body>
