@@ -349,6 +349,14 @@
     if (lead) lead.status = status;
     renderLeadsList();
   }
+  async function updateLeadGroup(id, group){
+    var value = group === 'auto' ? null : group;
+    var { error } = await sb.from('leads_klippy').update({ grupo_manual: value }).eq('id', id);
+    if (error) { alert('Erro ao atualizar grupo: ' + error.message); return; }
+    var lead = leads.find(function(l){ return l.id === id; });
+    if (lead) lead.grupo_manual = value;
+    renderLeadsList();
+  }
 
   function allRevenueEntries(){
     var entries = [];
@@ -552,6 +560,9 @@
     }
     return 'outros';
   }
+  function effectiveGroup(l){
+    return l.grupo_manual || categoryGroup(l.categoria);
+  }
 
   function buildLeadCard(l){
     var status = l.status || 'novo';
@@ -568,6 +579,10 @@
       '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
         (l.mensagem_gerada ? '<button type="button" class="lead-msg-toggle" style="font-size:12px;padding:5px 9px;display:flex;align-items:center;gap:4px;" aria-label="Ver mensagem">'+svgIcon('message',15)+'</button>' : '') +
         (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp">'+svgIcon('whatsapp',18)+'</a>' : '') +
+        '<select class="lead-group-select" data-id="'+l.id+'" style="width:auto;font-size:12px;padding:4px 8px;" title="Categoria">' +
+          '<option value="auto"'+(!l.grupo_manual?' selected':'')+'>Auto: '+CATEGORY_GROUP_LABELS[categoryGroup(l.categoria)]+'</option>' +
+          CATEGORY_GROUP_ORDER.map(function(g){ return '<option value="'+g+'"'+(l.grupo_manual===g?' selected':'')+'>'+CATEGORY_GROUP_LABELS[g]+'</option>'; }).join('') +
+        '</select>' +
         '<select class="lead-status-select" data-id="'+l.id+'" style="width:auto;font-size:12px;padding:4px 8px;background:'+(LEAD_STATUS_BG[status]||'var(--surface-1)')+';color:'+(LEAD_STATUS_TEXT[status]||'var(--text-primary)')+';border-color:transparent;">' +
           Object.keys(LEAD_STATUS_LABEL).map(function(k){ return '<option value="'+k+'"'+(k===status?' selected':'')+'>'+LEAD_STATUS_LABEL[k]+'</option>'; }).join('') +
         '</select>' +
@@ -598,6 +613,7 @@
       if (toggleBtn) toggleBtn.click();
     };
     row.querySelector('.lead-status-select').onchange = function(){ updateLeadStatus(this.dataset.id, this.value); };
+    row.querySelector('.lead-group-select').onchange = function(){ updateLeadGroup(this.dataset.id, this.value); };
     return wrap;
   }
 
@@ -605,7 +621,7 @@
     var list = document.getElementById('lead-list');
     var filtered = leads.filter(function(l){
       var statusOk = currentLeadFilter === 'todos' || l.status === currentLeadFilter;
-      var groupOk = currentGroupFilter === 'todos' || categoryGroup(l.categoria) === currentGroupFilter;
+      var groupOk = currentGroupFilter === 'todos' || effectiveGroup(l) === currentGroupFilter;
       return statusOk && groupOk;
     });
     list.innerHTML = '';
@@ -618,7 +634,7 @@
     }
 
     CATEGORY_GROUP_ORDER.forEach(function(groupKey){
-      var groupLeads = filtered.filter(function(l){ return categoryGroup(l.categoria) === groupKey; });
+      var groupLeads = filtered.filter(function(l){ return effectiveGroup(l) === groupKey; });
       if (groupLeads.length === 0) return;
       var section = document.createElement('div');
       section.innerHTML = '<p style="font-size:13px;font-weight:600;color:var(--text-secondary);margin:0 0 8px;">' + CATEGORY_GROUP_LABELS[groupKey] + ' · ' + groupLeads.length + '</p>';
