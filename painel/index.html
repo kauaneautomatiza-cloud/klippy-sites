@@ -171,14 +171,23 @@
   </div>
 
   <div id="view-leads" style="display:none;">
-    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">
       <button class="lead-filter-btn period-pill active" data-s="todos">Todos</button>
       <button class="lead-filter-btn period-pill" data-s="novo">Novo</button>
       <button class="lead-filter-btn period-pill" data-s="contatado">Contatado</button>
       <button class="lead-filter-btn period-pill" data-s="respondeu">Respondeu</button>
       <button class="lead-filter-btn period-pill" data-s="fechou">Fechou</button>
+      <span id="lead-count" style="margin-left:auto;font-size:12px;color:var(--text-secondary);"></span>
     </div>
-    <div id="lead-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+      <button class="lead-group-btn period-pill active" data-g="todos">Todos os tipos</button>
+      <button class="lead-group-btn period-pill" data-g="beleza">Beleza</button>
+      <button class="lead-group-btn period-pill" data-g="saude">Saúde e bem-estar</button>
+      <button class="lead-group-btn period-pill" data-g="advocacia">Advocacia</button>
+      <button class="lead-group-btn period-pill" data-g="alimentacao">Alimentação</button>
+      <button class="lead-group-btn period-pill" data-g="outros">Outros</button>
+    </div>
+    <div id="lead-list" style="display:flex;flex-direction:column;gap:16px;"></div>
     <p id="empty-leads-msg" style="display:none;color:var(--text-muted);font-size:14px;padding:2rem 0;text-align:center;">Nenhum lead ainda. A automação vai popular essa lista automaticamente.</p>
   </div>
 </div>
@@ -273,6 +282,7 @@
   var currentStatusFilter = 'todos';
   var leads = [];
   var currentLeadFilter = 'todos';
+  var currentGroupFilter = 'todos';
   var PACKAGE_PRICES = { 'Presença': 699, 'Visibilidade': 999, 'Completo': 2999 };
 
   function fmt(n){ return 'R$ ' + Number(n||0).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}); }
@@ -511,13 +521,15 @@
     var base = 'https://wa.me/' + digits;
     return text ? base + '?text=' + encodeURIComponent(text) : base;
   }
-function socialLabel(url){
+
+  function socialLabel(url){
     if (!url) return 'Ver perfil';
     if (url.indexOf('instagram.com') > -1) return 'Instagram';
     if (url.indexOf('facebook.com') > -1) return 'Facebook';
     if (url.indexOf('linktr.ee') > -1) return 'Linktree';
     return 'Ver perfil';
   }
+
   function socialIcon(url){
     if (!url) return 'link';
     if (url.indexOf('instagram.com') > -1) return 'instagram';
@@ -525,58 +537,96 @@ function socialLabel(url){
     return 'link';
   }
 
+  var CATEGORY_GROUPS = {
+    beleza: ['beauty salon','nail salon','hair salon','hair care','spa','barber shop','barbershop'],
+    saude: ['gym','fitness center','health','dentist','doctor','physiotherapist','wellness center','yoga studio','medical clinic'],
+    advocacia: ['lawyer','legal services','law firm','notary public'],
+    alimentacao: ['restaurant','bakery','cafe','coffee shop','confectionery']
+  };
+  var CATEGORY_GROUP_LABELS = { beleza: 'Beleza', saude: 'Saúde e bem-estar', advocacia: 'Advocacia', alimentacao: 'Alimentação', outros: 'Outros' };
+  var CATEGORY_GROUP_ORDER = ['beleza','saude','advocacia','alimentacao','outros'];
+  function categoryGroup(categoria){
+    var c = (categoria || '').toLowerCase();
+    for (var key in CATEGORY_GROUPS){
+      if (CATEGORY_GROUPS[key].indexOf(c) > -1) return key;
+    }
+    return 'outros';
+  }
+
+  function buildLeadCard(l){
+    var status = l.status || 'novo';
+    var wa = waLinkWithText(l.telefone, l.mensagem_gerada);
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'border:0.5px solid var(--border);border-radius:12px;background:var(--surface-2);box-shadow:0 1px 2px rgba(20,32,28,0.03);overflow:hidden;';
+    var row = document.createElement('div');
+    row.style.cssText = 'padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;';
+    row.innerHTML =
+      '<div style="min-width:0;flex:1;cursor:pointer;" class="lead-row-open">' +
+        '<p style="font-weight:600;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.nome || 'Sem nome') + '</p>' +
+        '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.categoria || '') + (l.nota_google ? ' · ' + l.nota_google + ' ★' : '') + (l.telefone ? ' · ' + escapeHtml(l.telefone) : '') + (l.site_atual ? ' · <a href="'+escapeHtml(l.site_atual)+'" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:underline;" onclick="event.stopPropagation();">'+socialLabel(l.site_atual)+'</a>' : '') + '</p>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
+        (l.mensagem_gerada ? '<button type="button" class="lead-msg-toggle" style="font-size:12px;padding:5px 9px;display:flex;align-items:center;gap:4px;" aria-label="Ver mensagem">'+svgIcon('message',15)+'</button>' : '') +
+        (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp">'+svgIcon('whatsapp',18)+'</a>' : '') +
+        '<select class="lead-status-select" data-id="'+l.id+'" style="width:auto;font-size:12px;padding:4px 8px;background:'+(LEAD_STATUS_BG[status]||'var(--surface-1)')+';color:'+(LEAD_STATUS_TEXT[status]||'var(--text-primary)')+';border-color:transparent;">' +
+          Object.keys(LEAD_STATUS_LABEL).map(function(k){ return '<option value="'+k+'"'+(k===status?' selected':'')+'>'+LEAD_STATUS_LABEL[k]+'</option>'; }).join('') +
+        '</select>' +
+      '</div>';
+    wrap.appendChild(row);
+
+    if (l.mensagem_gerada) {
+      var msgBox = document.createElement('div');
+      msgBox.style.cssText = 'display:none;padding:0 14px 14px;';
+      msgBox.innerHTML =
+        '<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;font-size:13px;color:var(--text-primary);line-height:1.5;white-space:pre-wrap;">' + escapeHtml(l.mensagem_gerada) + '</div>' +
+        '<button type="button" class="lead-msg-copy" style="margin-top:6px;font-size:12px;padding:4px 10px;">Copiar mensagem</button>';
+      wrap.appendChild(msgBox);
+      row.querySelector('.lead-msg-toggle').onclick = function(){
+        msgBox.style.display = msgBox.style.display === 'none' ? 'block' : 'none';
+      };
+      msgBox.querySelector('.lead-msg-copy').onclick = function(){
+        navigator.clipboard.writeText(l.mensagem_gerada).then(function(){
+          var btn = msgBox.querySelector('.lead-msg-copy');
+          var original = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(function(){ btn.textContent = original; }, 1500);
+        });
+      };
+    }
+    row.querySelector('.lead-row-open').onclick = function(){
+      var toggleBtn = row.querySelector('.lead-msg-toggle');
+      if (toggleBtn) toggleBtn.click();
+    };
+    row.querySelector('.lead-status-select').onchange = function(){ updateLeadStatus(this.dataset.id, this.value); };
+    return wrap;
+  }
+
   function renderLeadsList(){
     var list = document.getElementById('lead-list');
-    var filtered = leads.filter(function(l){ return currentLeadFilter === 'todos' || l.status === currentLeadFilter; });
+    var filtered = leads.filter(function(l){
+      var statusOk = currentLeadFilter === 'todos' || l.status === currentLeadFilter;
+      var groupOk = currentGroupFilter === 'todos' || categoryGroup(l.categoria) === currentGroupFilter;
+      return statusOk && groupOk;
+    });
     list.innerHTML = '';
     document.getElementById('empty-leads-msg').style.display = leads.length === 0 ? 'block' : 'none';
+    document.getElementById('lead-count').textContent = filtered.length + (filtered.length === 1 ? ' lead' : ' leads');
 
-    filtered.forEach(function(l){
-      var status = l.status || 'novo';
-      var wa = waLinkWithText(l.telefone, l.mensagem_gerada);
-      var wrap = document.createElement('div');
-      wrap.style.cssText = 'border:0.5px solid var(--border);border-radius:12px;background:var(--surface-2);box-shadow:0 1px 2px rgba(20,32,28,0.03);overflow:hidden;';
-      var row = document.createElement('div');
-      row.style.cssText = 'padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;';
-     row.innerHTML =
-        '<div style="min-width:0;flex:1;cursor:pointer;" class="lead-row-open">' +
-          '<p style="font-weight:600;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.nome || 'Sem nome') + '</p>' +
-          '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.categoria || '') + (l.nota_google ? ' · ' + l.nota_google + ' ★' : '') + (l.telefone ? ' · ' + escapeHtml(l.telefone) : '') + (l.site_atual ? ' · <a href="'+escapeHtml(l.site_atual)+'" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:underline;" onclick="event.stopPropagation();">'+socialLabel(l.site_atual)+'</a>' : '') + '</p>' +
-        '</div>' +
-        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
-          (l.mensagem_gerada ? '<button type="button" class="lead-msg-toggle" style="font-size:12px;padding:5px 9px;display:flex;align-items:center;gap:4px;" aria-label="Ver mensagem">'+svgIcon('message',15)+'</button>' : '') +
-          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp">'+svgIcon('whatsapp',18)+'</a>' : '') +
-          '<select class="lead-status-select" data-id="'+l.id+'" style="width:auto;font-size:12px;padding:4px 8px;background:'+(LEAD_STATUS_BG[status]||'var(--surface-1)')+';color:'+(LEAD_STATUS_TEXT[status]||'var(--text-primary)')+';border-color:transparent;">' +
-            Object.keys(LEAD_STATUS_LABEL).map(function(k){ return '<option value="'+k+'"'+(k===status?' selected':'')+'>'+LEAD_STATUS_LABEL[k]+'</option>'; }).join('') +
-          '</select>' +
-        '</div>';
-      wrap.appendChild(row);
+    if (currentGroupFilter !== 'todos') {
+      filtered.forEach(function(l){ list.appendChild(buildLeadCard(l)); });
+      return;
+    }
 
-      if (l.mensagem_gerada) {
-        var msgBox = document.createElement('div');
-        msgBox.style.cssText = 'display:none;padding:0 14px 14px;';
-        msgBox.innerHTML =
-          '<div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;font-size:13px;color:var(--text-primary);line-height:1.5;white-space:pre-wrap;">' + escapeHtml(l.mensagem_gerada) + '</div>' +
-          '<button type="button" class="lead-msg-copy" style="margin-top:6px;font-size:12px;padding:4px 10px;">Copiar mensagem</button>';
-        wrap.appendChild(msgBox);
-        row.querySelector('.lead-msg-toggle').onclick = function(){
-          msgBox.style.display = msgBox.style.display === 'none' ? 'block' : 'none';
-        };
-        msgBox.querySelector('.lead-msg-copy').onclick = function(){
-          navigator.clipboard.writeText(l.mensagem_gerada).then(function(){
-            var btn = msgBox.querySelector('.lead-msg-copy');
-            var original = btn.textContent;
-            btn.textContent = 'Copiado!';
-            setTimeout(function(){ btn.textContent = original; }, 1500);
-          });
-        };
-      }
-      row.querySelector('.lead-row-open').onclick = function(){
-        var toggleBtn = row.querySelector('.lead-msg-toggle');
-        if (toggleBtn) toggleBtn.click();
-      };
-      row.querySelector('.lead-status-select').onchange = function(){ updateLeadStatus(this.dataset.id, this.value); };
-      list.appendChild(wrap);
+    CATEGORY_GROUP_ORDER.forEach(function(groupKey){
+      var groupLeads = filtered.filter(function(l){ return categoryGroup(l.categoria) === groupKey; });
+      if (groupLeads.length === 0) return;
+      var section = document.createElement('div');
+      section.innerHTML = '<p style="font-size:13px;font-weight:600;color:var(--text-secondary);margin:0 0 8px;">' + CATEGORY_GROUP_LABELS[groupKey] + ' · ' + groupLeads.length + '</p>';
+      var cardsWrap = document.createElement('div');
+      cardsWrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
+      groupLeads.forEach(function(l){ cardsWrap.appendChild(buildLeadCard(l)); });
+      section.appendChild(cardsWrap);
+      list.appendChild(section);
     });
   }
 
@@ -706,6 +756,14 @@ function socialLabel(url){
       renderLeadsList();
     };
   });
+  document.querySelectorAll('.lead-group-btn').forEach(function(btn){
+    btn.onclick = function(){
+      currentGroupFilter = this.dataset.g;
+      document.querySelectorAll('.lead-group-btn').forEach(function(b){ b.classList.remove('active'); });
+      this.classList.add('active');
+      renderLeadsList();
+    };
+  });
 
   function setActiveTab(activeBtn){
     ['tab-dash','tab-clients','tab-leads'].forEach(function(id){ document.getElementById(id).classList.remove('active'); });
@@ -758,7 +816,7 @@ function socialLabel(url){
   updateClock();
   setInterval(updateClock, 15000);
 
- checkSession();
+  checkSession();
 })();
 </script>
 </body>
