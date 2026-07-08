@@ -124,6 +124,7 @@
     <div style="display:flex;gap:6px;">
       <button id="tab-dash" class="tab-pill active">Receita</button>
       <button id="tab-clients" class="tab-pill">Clientes</button>
+      <button id="tab-leads" class="tab-pill">Prospecção</button>
     </div>
     <button id="btn-add" class="brand">+ Novo cliente</button>
   </div>
@@ -168,6 +169,18 @@
     </div>
     <div id="client-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     <p id="empty-msg" style="display:none;color:var(--text-muted);font-size:14px;padding:2rem 0;text-align:center;">Nenhum cliente ainda. Toque em "+ Novo cliente" pra cadastrar o primeiro.</p>
+  </div>
+
+  <div id="view-leads" style="display:none;">
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+      <button class="lead-filter-btn period-pill active" data-s="todos">Todos</button>
+      <button class="lead-filter-btn period-pill" data-s="novo">Novo</button>
+      <button class="lead-filter-btn period-pill" data-s="contatado">Contatado</button>
+      <button class="lead-filter-btn period-pill" data-s="respondeu">Respondeu</button>
+      <button class="lead-filter-btn period-pill" data-s="fechou">Fechou</button>
+    </div>
+    <div id="lead-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <p id="empty-leads-msg" style="display:none;color:var(--text-muted);font-size:14px;padding:2rem 0;text-align:center;">Nenhum lead ainda. A automação vai popular essa lista automaticamente.</p>
   </div>
 </div>
 
@@ -259,6 +272,8 @@
   var currentAddons = [];
   var currentPeriod = 'mes';
   var currentStatusFilter = 'todos';
+  var leads = [];
+  var currentLeadFilter = 'todos';
   var PACKAGE_PRICES = { 'Presença': 699, 'Visibilidade': 999, 'Completo': 2999 };
 
   function fmt(n){ return 'R$ ' + Number(n||0).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}); }
@@ -309,6 +324,20 @@
     var { error } = await sb.from('clientes').delete().eq('id', id);
     if (error) { alert('Erro ao excluir: ' + error.message); return false; }
     return true;
+  }
+
+  async function loadLeads(){
+    var { data, error } = await sb.from('leads_klippy').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); alert('Erro ao carregar leads: ' + error.message); return; }
+    leads = data || [];
+    renderLeadsList();
+  }
+  async function updateLeadStatus(id, status){
+    var { error } = await sb.from('leads_klippy').update({ status: status }).eq('id', id);
+    if (error) { alert('Erro ao atualizar lead: ' + error.message); return; }
+    var lead = leads.find(function(l){ return l.id === id; });
+    if (lead) lead.status = status;
+    renderLeadsList();
   }
 
   function allRevenueEntries(){
@@ -458,6 +487,45 @@
 
   function render(){ renderMetrics(); renderChart(); renderClientList(); }
 
+  var LEAD_STATUS_LABEL = { novo: 'Novo', contatado: 'Contatado', respondeu: 'Respondeu', fechou: 'Fechou' };
+  var LEAD_STATUS_BG = { novo: '#e6f1fb', contatado: '#faeeda', respondeu: '#eaf3de', fechou: '#e1f5ee' };
+  var LEAD_STATUS_TEXT = { novo: '#042c53', contatado: '#412402', respondeu: '#173404', fechou: '#04342c' };
+
+  function waLinkWithText(phone, text){
+    var digits = (phone||'').replace(/\D/g,'');
+    if (!digits) return null;
+    if (digits.length <= 11) digits = '55' + digits;
+    var base = 'https://wa.me/' + digits;
+    return text ? base + '?text=' + encodeURIComponent(text) : base;
+  }
+
+  function renderLeadsList(){
+    var list = document.getElementById('lead-list');
+    var filtered = leads.filter(function(l){ return currentLeadFilter === 'todos' || l.status === currentLeadFilter; });
+    list.innerHTML = '';
+    document.getElementById('empty-leads-msg').style.display = leads.length === 0 ? 'block' : 'none';
+
+    filtered.forEach(function(l){
+      var status = l.status || 'novo';
+      var wa = waLinkWithText(l.telefone, l.mensagem_gerada);
+      var row = document.createElement('div');
+      row.style.cssText = 'border:0.5px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface-2);box-shadow:0 1px 2px rgba(20,32,28,0.03);';
+      row.innerHTML =
+        '<div style="min-width:0;flex:1;">' +
+          '<p style="font-weight:600;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.nome || 'Sem nome') + '</p>' +
+          '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.categoria || '') + (l.nota_google ? ' · ' + l.nota_google + ' ★' : '') + '</p>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
+          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:18px;"></i></a>' : '') +
+          '<select class="lead-status-select" data-id="'+l.id+'" style="width:auto;font-size:12px;padding:4px 8px;background:'+(LEAD_STATUS_BG[status]||'var(--surface-1)')+';color:'+(LEAD_STATUS_TEXT[status]||'var(--text-primary)')+';border-color:transparent;">' +
+            Object.keys(LEAD_STATUS_LABEL).map(function(k){ return '<option value="'+k+'"'+(k===status?' selected':'')+'>'+LEAD_STATUS_LABEL[k]+'</option>'; }).join('') +
+          '</select>' +
+        '</div>';
+      row.querySelector('.lead-status-select').onchange = function(){ updateLeadStatus(this.dataset.id, this.value); };
+      list.appendChild(row);
+    });
+  }
+
   function renderAddonsList(){
     var wrap = document.getElementById('addons-list');
     wrap.innerHTML = '';
@@ -576,19 +644,41 @@
       renderClientList();
     };
   });
+  document.querySelectorAll('.lead-filter-btn').forEach(function(btn){
+    btn.onclick = function(){
+      currentLeadFilter = this.dataset.s;
+      document.querySelectorAll('.lead-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      this.classList.add('active');
+      renderLeadsList();
+    };
+  });
 
+  function setActiveTab(activeBtn){
+    ['tab-dash','tab-clients','tab-leads'].forEach(function(id){ document.getElementById(id).classList.remove('active'); });
+    activeBtn.classList.add('active');
+  }
   document.getElementById('tab-dash').onclick = function(){
     document.getElementById('view-dash').style.display = 'block';
     document.getElementById('view-clients').style.display = 'none';
-    this.classList.add('active');
-    document.getElementById('tab-clients').classList.remove('active');
+    document.getElementById('view-leads').style.display = 'none';
+    document.getElementById('btn-add').style.display = 'inline-block';
+    setActiveTab(this);
     renderChart();
   };
   document.getElementById('tab-clients').onclick = function(){
     document.getElementById('view-dash').style.display = 'none';
     document.getElementById('view-clients').style.display = 'block';
-    this.classList.add('active');
-    document.getElementById('tab-dash').classList.remove('active');
+    document.getElementById('view-leads').style.display = 'none';
+    document.getElementById('btn-add').style.display = 'inline-block';
+    setActiveTab(this);
+  };
+  document.getElementById('tab-leads').onclick = function(){
+    document.getElementById('view-dash').style.display = 'none';
+    document.getElementById('view-clients').style.display = 'none';
+    document.getElementById('view-leads').style.display = 'block';
+    document.getElementById('btn-add').style.display = 'none';
+    setActiveTab(this);
+    loadLeads();
   };
 
   function updateClock(){
