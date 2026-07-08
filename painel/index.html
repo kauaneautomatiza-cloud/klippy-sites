@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Klippy — Painel</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -139,19 +138,19 @@
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.25rem;">
       <div class="metric-card" style="--accent-bar:var(--brand);">
-        <p class="metric-label" id="period-label"><i class="ti ti-currency-dollar" style="font-size:14px;" aria-hidden="true"></i>Receita do mês</p>
+        <p class="metric-label" id="period-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><path d="M12 3v18M16.5 7c0-1.4-2-2.5-4.5-2.5S7.5 5.6 7.5 7s1.8 2.3 4.5 3 4.5 1.6 4.5 3-2 3.5-4.5 3.5S7.5 15.4 7.5 14"/></svg>Receita do mês</p>
         <p id="m-period" class="metric-value">R$ 0</p>
       </div>
       <div class="metric-card" style="--accent-bar:#7c8f86;">
-        <p class="metric-label"><i class="ti ti-refresh" style="font-size:14px;" aria-hidden="true"></i>Recorrência mensal</p>
+        <p class="metric-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg>Recorrência mensal</p>
         <p id="m-mrr" class="metric-value">R$ 0</p>
       </div>
       <div class="metric-card" style="--accent-bar:#3f5a51;">
-        <p class="metric-label"><i class="ti ti-users" style="font-size:14px;" aria-hidden="true"></i>Clientes ativos</p>
+        <p class="metric-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 8a3 3 0 1 0 0-6"/><path d="M17.5 14.5c2 .6 3.5 2.6 3.5 5.5"/></svg>Clientes ativos</p>
         <p id="m-active" class="metric-value">0</p>
       </div>
       <div class="metric-card" style="--accent-bar:#b8860b;">
-        <p class="metric-label"><i class="ti ti-target-arrow" style="font-size:14px;" aria-hidden="true"></i>Leads</p>
+        <p class="metric-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px;"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>Leads</p>
         <p id="m-leads" class="metric-value">0</p>
       </div>
     </div>
@@ -449,6 +448,19 @@
   }
 
   function escapeHtml(s){ var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+  function svgIcon(name, size){
+    size = size || 16;
+    var p = {
+      whatsapp: '<path d="M20 12a8 8 0 1 1-3.3-6.5"/><path d="M20 4l-8.5 8.5"/><path d="M8.5 9.5c0 3.6 2.9 6.5 6.5 6.5"/>',
+      check: '<path d="M20 6 9 17l-5-5"/>',
+      message: '<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l1.6-3.8A8.5 8.5 0 1 1 21 11.5z"/>',
+      instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor"/>',
+      facebook: '<path d="M15 8.5h2.5V5H15a4 4 0 0 0-4 4v2H8.5v3.5H11V20h3.5v-5.5H17l0.7-3.5H14.5v-1.5c0-.6.4-1 1-1z" fill="currentColor" stroke="none"/>',
+      link: '<path d="M9 15l6-6"/><path d="M8.5 12l-1.7 1.7a3 3 0 0 0 4.2 4.2l1.7-1.7"/><path d="M15.5 12l1.7-1.7a3 3 0 0 0-4.2-4.2L11.3 7.8"/>'
+    };
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;">'+(p[name]||p.link)+'</svg>';
+  }
   function waLink(phone){
     var digits = (phone||'').replace(/\D/g,'');
     if (!digits) return null;
@@ -477,9 +489,9 @@
           '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(c.business || '') + (c.package ? ' · ' + escapeHtml(c.package) : '') + (activeAddons ? ' · ' + activeAddons + ' recorrência' + (activeAddons>1?'s':'') : '') + '</p>' +
         '</div>' +
         '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
-          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:18px;"></i></a>' : '') +
+          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp">'+svgIcon('whatsapp',18)+'</a>' : '') +
           '<span style="font-size:12px;padding:3px 10px;border-radius:var(--radius);background:'+badgeBg+';color:'+badgeText+';">'+(isActive?'Cliente':'Lead')+'</span>' +
-          (c.entregue ? '<i class="ti ti-check" style="font-size:16px;color:var(--text-success);" aria-label="Entregue"></i>' : '') +
+          (c.entregue ? '<span style="color:var(--text-success);" aria-label="Entregue">'+svgIcon('check',16)+'</span>' : '') +
         '</div>';
       row.querySelector('.row-open').onclick = function(){ openModal(c.id); };
       list.appendChild(row);
@@ -499,13 +511,20 @@
     var base = 'https://wa.me/' + digits;
     return text ? base + '?text=' + encodeURIComponent(text) : base;
   }
+function socialLabel(url){
+    if (!url) return 'Ver perfil';
+    if (url.indexOf('instagram.com') > -1) return 'Instagram';
+    if (url.indexOf('facebook.com') > -1) return 'Facebook';
+    if (url.indexOf('linktr.ee') > -1) return 'Linktree';
+    return 'Ver perfil';
+  }
 
   function socialIcon(url){
-    if (!url) return 'ti-link';
-    if (url.indexOf('instagram.com') > -1) return 'ti-brand-instagram';
-    if (url.indexOf('facebook.com') > -1) return 'ti-brand-facebook';
-    if (url.indexOf('linktr.ee') > -1) return 'ti-link';
-    return 'ti-external-link';
+  function socialIcon(url){
+    if (!url) return 'link';
+    if (url.indexOf('instagram.com') > -1) return 'instagram';
+    if (url.indexOf('facebook.com') > -1) return 'facebook';
+    return 'link';
   }
 
   function renderLeadsList(){
@@ -521,15 +540,14 @@
       wrap.style.cssText = 'border:0.5px solid var(--border);border-radius:12px;background:var(--surface-2);box-shadow:0 1px 2px rgba(20,32,28,0.03);overflow:hidden;';
       var row = document.createElement('div');
       row.style.cssText = 'padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;';
-      row.innerHTML =
+     row.innerHTML =
         '<div style="min-width:0;flex:1;cursor:pointer;" class="lead-row-open">' +
           '<p style="font-weight:600;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.nome || 'Sem nome') + '</p>' +
-          '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.categoria || '') + (l.nota_google ? ' · ' + l.nota_google + ' ★' : '') + (l.telefone ? ' · ' + (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);text-decoration:underline;" onclick="event.stopPropagation();">'+escapeHtml(l.telefone)+'</a>' : escapeHtml(l.telefone)) : '') + '</p>' +
+          '<p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(l.categoria || '') + (l.nota_google ? ' · ' + l.nota_google + ' ★' : '') + (l.telefone ? ' · ' + escapeHtml(l.telefone) : '') + (l.site_atual ? ' · <a href="'+escapeHtml(l.site_atual)+'" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:underline;" onclick="event.stopPropagation();">'+socialLabel(l.site_atual)+'</a>' : '') + '</p>' +
         '</div>' +
         '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' +
-          (l.site_atual ? '<a href="'+escapeHtml(l.site_atual)+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Ver rede social atual"><i class="ti '+socialIcon(l.site_atual)+'" style="font-size:17px;" aria-hidden="true"></i></a>' : '') +
-          (l.mensagem_gerada ? '<button type="button" class="lead-msg-toggle" style="font-size:12px;padding:5px 9px;display:flex;align-items:center;gap:4px;" aria-label="Ver mensagem"><i class="ti ti-message-2" style="font-size:15px;" aria-hidden="true"></i></button>' : '') +
-          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp"><i class="ti ti-brand-whatsapp" style="font-size:18px;"></i></a>' : '') +
+          (l.mensagem_gerada ? '<button type="button" class="lead-msg-toggle" style="font-size:12px;padding:5px 9px;display:flex;align-items:center;gap:4px;" aria-label="Ver mensagem">'+svgIcon('message',15)+'</button>' : '') +
+          (wa ? '<a href="'+wa+'" target="_blank" rel="noopener" style="color:var(--text-secondary);" aria-label="Abrir WhatsApp">'+svgIcon('whatsapp',18)+'</a>' : '') +
           '<select class="lead-status-select" data-id="'+l.id+'" style="width:auto;font-size:12px;padding:4px 8px;background:'+(LEAD_STATUS_BG[status]||'var(--surface-1)')+';color:'+(LEAD_STATUS_TEXT[status]||'var(--text-primary)')+';border-color:transparent;">' +
             Object.keys(LEAD_STATUS_LABEL).map(function(k){ return '<option value="'+k+'"'+(k===status?' selected':'')+'>'+LEAD_STATUS_LABEL[k]+'</option>'; }).join('') +
           '</select>' +
@@ -563,6 +581,7 @@
       list.appendChild(wrap);
     });
   }
+
   function renderAddonsList(){
     var wrap = document.getElementById('addons-list');
     wrap.innerHTML = '';
