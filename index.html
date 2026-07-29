@@ -11,6 +11,7 @@
 <style>
   :root{
     --bg:#08060F;
+    --bg-alt:#171128;
     --surface:#12101C;
     --surface-2:#191527;
     --text:#F5F3FA;
@@ -41,6 +42,17 @@
 
   .wrap{ max-width:960px; margin:0 auto; padding:0 20px; }
   section{ padding:56px 0; }
+  section.hero-section{ padding:0; }
+  section.alt-bg{ background:var(--bg-alt); }
+  section.glow-bg{ position:relative; overflow:hidden; }
+  section.glow-bg::before{
+    content:"";
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:700px; height:500px;
+    background:radial-gradient(ellipse, rgba(139,92,246,0.28), transparent 70%);
+    pointer-events:none;
+  }
+  section.glow-bg > .wrap{ position:relative; z-index:1; }
 
   /* ---------- header ---------- */
   header{
@@ -71,7 +83,15 @@
   }
 
   /* ---------- hero ---------- */
-  .hero{ padding:56px 0 40px; text-align:center; }
+  .hero{ padding:56px 0 40px; text-align:center; position:relative; }
+  .hero::before{
+    content:"";
+    position:absolute; top:-20px; left:50%; transform:translateX(-50%);
+    width:600px; height:340px;
+    background:radial-gradient(ellipse, rgba(139,92,246,0.3), transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+  .hero > *{ position:relative; z-index:1; }
   .eyebrow{
     display:inline-flex; align-items:center; gap:6px;
     font-family:'JetBrains Mono', monospace;
@@ -145,6 +165,17 @@
   @media (max-width:600px){
     .stats{ grid-template-columns:repeat(2, 1fr); gap:24px; }
   }
+
+  .hero-mockup{
+    max-width:320px; margin:40px auto 0;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:16px; position:relative; z-index:1;
+  }
+  .hero-mockup-dots{ display:flex; gap:5px; margin-bottom:12px; }
+  .hero-mockup-dots span{ width:7px; height:7px; border-radius:50%; background:var(--line); display:inline-block; }
+  .hero-mockup-bar{ height:8px; border-radius:4px; background:var(--surface-2); margin-bottom:8px; }
+  .hero-mockup-bar.short{ width:60%; }
+  .hero-mockup-card{ height:70px; border-radius:8px; background:linear-gradient(135deg, rgba(139,92,246,0.25), rgba(232,121,200,0.15)); margin-top:14px; }
 
   /* ---------- section head ---------- */
   .section-head{ text-align:center; margin-bottom:36px; }
@@ -269,6 +300,23 @@
     margin-top:26px;
   }
 
+  .pacote-single{
+    background:var(--surface); border:2px solid var(--accent); border-radius:18px;
+    padding:32px; max-width:420px; margin:0 auto;
+    text-align:center;
+  }
+  .launch-badge{
+    display:inline-block;
+    background:var(--accent); color:#fff;
+    font-family:'Inter', sans-serif; font-weight:600; font-size:11.5px;
+    padding:5px 14px; border-radius:999px;
+    margin-bottom:16px; text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .pacote-single .pacote-tag{ margin-bottom:16px; }
+  .pacote-single .pacote-price{ font-size:36px; margin-bottom:22px; }
+  .pacote-single .pacote-list{ text-align:left; margin-bottom:24px; }
+  .pacote-cta{ width:100%; justify-content:center; }
+
   @media (max-width:760px){
     .pacotes-grid{ grid-template-columns:1fr; }
   }
@@ -356,19 +404,27 @@
 
   .quiz-result{ display:none; }
   .quiz-result.active{ display:block; }
-  .result-badge{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:11.5px;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-    color:var(--text-soft);
-    margin-bottom:14px;
+  .result-score{
+    font-family:'Sora', sans-serif; font-size:44px; font-weight:700;
+    color:var(--accent-2); margin-bottom:6px;
   }
-  .result-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .result-score-max{ font-size:20px; font-weight:500; color:var(--text-mute); }
   .result-title{ font-family:'Sora', sans-serif; font-size:21px; font-weight:700; margin-bottom:8px; }
-  .result-desc{ font-size:14.5px; color:var(--text-soft); margin-bottom:8px; }
-  .result-price{ font-family:'Sora', sans-serif; font-size:22px; font-weight:700; color:var(--accent-2); margin-bottom:22px; }
+  .result-desc{ font-size:14.5px; color:var(--text-soft); margin-bottom:22px; }
+
+  .lead-gate{
+    background:var(--surface-2); border-radius:12px; padding:20px;
+  }
+  .lead-gate-label{ font-size:13px; color:var(--text-soft); margin-bottom:14px; }
+  .lead-gate input{
+    display:block; width:100%; margin-bottom:10px;
+    background:var(--surface); border:1px solid var(--line); color:var(--text);
+    border-radius:8px; padding:11px 14px; font-family:'Inter', sans-serif; font-size:13.5px;
+  }
+  .lead-gate input::placeholder{ color:var(--text-mute); }
+  .lead-gate input:focus{ outline:none; border-color:var(--accent); }
+  .lead-gate .btn-primary{ width:100%; justify-content:center; margin-top:4px; border:none; cursor:pointer; }
+
   .result-cta{
     display:inline-flex; align-items:center; gap:8px;
     background:var(--accent); color:#fff;
@@ -478,17 +534,20 @@
     font-size:9.5px; color:#667781;
     display:flex; align-items:center; gap:3px;
   }
+  .wa-quick-replies{
+    background:#fff; border-radius:8px; overflow:hidden;
+    max-width:88%; align-self:flex-start;
+    box-shadow:0 1px 1px rgba(0,0,0,0.08);
+  }
+  .wa-quick-reply{
+    padding:9px 12px; text-align:center;
+    font-size:12px; font-weight:500; color:#00a5f4;
+    border-top:1px solid #e5e5e5;
+  }
+  .wa-quick-reply:first-child{ border-top:none; }
   .wa-check{ color:#53bdeb; font-style:normal; }
 
   /* ---------- prova ---------- */
-  .prova-box{
-    background:var(--surface);
-    border:1px dashed var(--line);
-    border-radius:16px;
-    padding:32px;
-    text-align:center;
-    max-width:460px; margin:0 auto;
-  }
   .prova-badge{
     display:inline-block;
     font-family:'JetBrains Mono', monospace;
@@ -500,9 +559,54 @@
     margin-bottom:16px;
   }
 
+  .cases-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;
+    max-width:640px; margin:0 auto;
+  }
+  .cases-grid.cases-grid-1{ grid-template-columns:1fr; max-width:420px; }
+  .case-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:24px; display:flex; flex-direction:column;
+  }
+  .case-card.muted{ justify-content:center; align-items:flex-start; }
+  .case-tag{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--accent-2);
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;
+  }
+  .case-name{ font-family:'Sora', sans-serif; font-size:17px; font-weight:700; margin-bottom:8px; }
+  .case-desc{ font-size:13px; color:var(--text-soft); line-height:1.55; margin-bottom:16px; }
+  .case-link{
+    font-family:'Inter', sans-serif; font-weight:600; font-size:13px;
+    color:var(--accent-2); text-decoration:none;
+  }
+  .case-link:hover{ text-decoration:underline; }
+
+  @media (max-width:600px){
+    .cases-grid{ grid-template-columns:1fr; }
+  }
+
   /* ---------- cta final ---------- */
   .cta-final{ text-align:center; }
   .cta-final h2{ margin-bottom:24px; }
+
+  .faq-list{ max-width:680px; margin:0 auto; }
+  .faq-item{ border-bottom:1px solid var(--line); }
+  .faq-item:last-child{ border-bottom:none; }
+  .faq-q{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    font-size:15px; font-weight:600; color:var(--text);
+    padding:18px 0; margin:0; cursor:pointer;
+  }
+  .faq-q .faq-chevron{ flex-shrink:0; color:var(--text-mute); transition:transform .2s ease; font-size:14px; }
+  .faq-item.open .faq-q .faq-chevron{ transform:rotate(180deg); color:var(--accent); }
+  .faq-a{
+    font-size:13.5px; color:var(--text-soft); line-height:1.6;
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height .25s ease, opacity .2s ease, padding-bottom .25s ease;
+    padding-bottom:0;
+  }
+  .faq-item.open .faq-a{ max-height:220px; opacity:1; padding-bottom:18px; }
+  .offer-panel[data-faq-panel] .faq-list{ margin-top:8px; padding-top:8px; border-top:1px dashed var(--line); }
 
   footer{
     text-align:center;
@@ -537,6 +641,7 @@
   </div>
 </header>
 
+<section class="hero-section">
 <div class="wrap">
 
   <!-- HERO -->
@@ -556,61 +661,72 @@
       <div class="stat"><div class="stat-num mono">1:1</div><div class="stat-label">suporte direto comigo</div></div>
     </div>
   </div>
+  <div class="hero-mockup" aria-hidden="true">
+    <div class="hero-mockup-dots"><span></span><span></span><span></span></div>
+    <div class="hero-mockup-bar"></div>
+    <div class="hero-mockup-bar short"></div>
+    <div class="hero-mockup-card"></div>
+  </div>
 
-  <!-- PROBLEMA -->
-  <section class="problema">
-    <div class="section-head">
-      <h2>Quem tem site aparece primeiro no Google.</h2>
-      <p>Quem não tem, perde cliente todo dia — pra quem apareceu primeiro na busca.</p>
-    </div>
-  </section>
+</div>
+</section>
 
-  <!-- RECURSOS -->
-  <section>
-    <div class="section-head">
-      <span class="section-label">o que você leva</span>
-      <h2>Tudo que você precisa pra ser encontrado</h2>
-    </div>
-    <div class="recursos-grid">
-      <div class="recurso-card">
-        <div class="recurso-icon">🖥️</div>
-        <div class="recurso-title">Site one-page responsivo</div>
-        <div class="recurso-desc">Funciona bem no celular, que é onde seu cliente vai te encontrar.</div>
-      </div>
-      <div class="recurso-card">
-        <div class="recurso-icon">🌐</div>
-        <div class="recurso-title">Domínio e hospedagem</div>
-        <div class="recurso-desc">Endereço próprio, sem taxa escondida no meio do caminho.</div>
-      </div>
-      <div class="recurso-card">
-        <div class="recurso-icon">📍</div>
-        <div class="recurso-title">Google Meu Negócio</div>
-        <div class="recurso-desc">Otimizado pra aparecer quando alguém busca perto de você.</div>
-      </div>
-      <div class="recurso-card">
-        <div class="recurso-icon">💬</div>
-        <div class="recurso-title">Automação de WhatsApp</div>
-        <div class="recurso-desc">Menos tempo respondendo a mesma pergunta o dia inteiro.</div>
-      </div>
-      <div class="recurso-card">
-        <div class="recurso-icon">🛠️</div>
-        <div class="recurso-title">Atualização grátis</div>
-        <div class="recurso-desc">Até 15 dias após a entrega, sem custo, pra ajustes simples.</div>
-      </div>
-      <div class="recurso-card">
-        <div class="recurso-icon">🤝</div>
-        <div class="recurso-title">Suporte direto comigo</div>
-        <div class="recurso-desc">Sem central de atendimento — quem monta seu site é quem te responde.</div>
-      </div>
-    </div>
-  </section>
+<section class="problema">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Quem tem site aparece primeiro no Google.</h2>
+    <p>Quem não tem, perde cliente todo dia — pra quem apareceu primeiro na busca.</p>
+  </div>
+</div>
+</section>
 
-  <!-- PACOTES -->
-  <section id="pacotes">
-    <div class="section-head">
-      <span class="section-label">pacotes</span>
-      <h2>Escolha o formato que faz sentido para o seu negócio</h2>
+<section class="alt-bg">
+<div class="wrap">
+  <div class="section-head">
+    <span class="section-label">o que você leva</span>
+    <h2>Tudo que você precisa pra ser encontrado</h2>
+  </div>
+  <div class="recursos-grid">
+    <div class="recurso-card">
+      <div class="recurso-icon">🖥️</div>
+      <div class="recurso-title">Site one-page responsivo</div>
+      <div class="recurso-desc">Funciona bem no celular, que é onde seu cliente vai te encontrar.</div>
     </div>
+    <div class="recurso-card">
+      <div class="recurso-icon">🌐</div>
+      <div class="recurso-title">Domínio e hospedagem</div>
+      <div class="recurso-desc">Inclusos no primeiro ano, sem taxa escondida no meio do caminho.</div>
+    </div>
+    <div class="recurso-card">
+      <div class="recurso-icon">🎨</div>
+      <div class="recurso-title">Identidade visual própria</div>
+      <div class="recurso-desc">Cores, fontes e estilo pensados pro seu negócio, não um modelo genérico.</div>
+    </div>
+    <div class="recurso-card">
+      <div class="recurso-icon">💬</div>
+      <div class="recurso-title">Automação de WhatsApp</div>
+      <div class="recurso-desc">Menos tempo respondendo a mesma pergunta o dia inteiro.</div>
+    </div>
+    <div class="recurso-card">
+      <div class="recurso-icon">🛠️</div>
+      <div class="recurso-title">Atualização grátis</div>
+      <div class="recurso-desc">Até 15 dias após a entrega, sem custo, pra ajustes simples.</div>
+    </div>
+    <div class="recurso-card">
+      <div class="recurso-icon">🤝</div>
+      <div class="recurso-title">Suporte direto comigo</div>
+      <div class="recurso-desc">Sem central de atendimento — quem monta seu site é quem te responde.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="pacotes" class="glow-bg">
+<div class="wrap">
+  <div class="section-head">
+    <span class="section-label">pacotes</span>
+    <h2>Escolha o formato que faz sentido para o seu negócio</h2>
+  </div>
 
     <div class="offer-toggle">
       <button class="offer-toggle-btn active" data-offer="site">Quero um site</button>
@@ -618,31 +734,19 @@
     </div>
 
     <div class="offer-panel active" data-offer-panel="site">
-      <div class="pacotes-grid pacotes-grid-2">
-        <div class="pacote-card featured">
-          <span class="featured-badge">mais escolhido</span>
-          <div class="pacote-name">Pacote Presença</div>
-          <div class="pacote-tag">Seu primeiro passo pra existir online</div>
-          <div class="pacote-price mono">R$ 699</div>
-          <ul class="pacote-list">
-            <li>Site one-page sob medida, a partir do seu briefing</li>
-            <li>Domínio e hospedagem inclusos no 1º ano</li>
-            <li>Botão de contato direto via WhatsApp</li>
-            <li>1 atualização grátis em até 15 dias</li>
-          </ul>
-        </div>
-
-        <div class="pacote-card">
-          <div class="pacote-name">Pacote Visibilidade</div>
-          <div class="pacote-tag">Presença + ser encontrado</div>
-          <div class="pacote-price mono">R$ 999</div>
-          <ul class="pacote-list">
-            <li>Tudo do Pacote Presença</li>
-            <li>Otimização completa do Google Meu Negócio</li>
-            <li>Orientação pra pedir e responder avaliações</li>
-            <li>1 atualização grátis em até 15 dias</li>
-          </ul>
-        </div>
+      <div class="pacote-single">
+        <span class="launch-badge">preço de lançamento</span>
+        <div class="pacote-name">Pacote Presença</div>
+        <div class="pacote-tag">Seu site profissional, sob medida, no ar em até 15 dias</div>
+        <div class="pacote-price mono">R$ 499</div>
+        <ul class="pacote-list">
+          <li>Site one-page sob medida, a partir do seu briefing</li>
+          <li>Domínio e hospedagem inclusos no 1º ano</li>
+          <li>Identidade visual própria — nada de modelo genérico</li>
+          <li>Botão de contato direto via WhatsApp</li>
+          <li>1 atualização grátis em até 15 dias</li>
+        </ul>
+        <a class="btn-primary pacote-cta" href="#diagnostico">fazer diagnóstico →</a>
       </div>
       <p class="pacote-note">Precisa de mais ajustes depois da atualização grátis? Em breve, planos de manutenção mensal.</p>
     </div>
@@ -668,18 +772,20 @@
           <div class="pacote-price mono">R$ 349<span class="pacote-price-sub">+ R$ 74,90/mês</span></div>
           <ul class="pacote-list">
             <li>Site one-page com sua identidade visual</li>
+            <li>Domínio e hospedagem inclusos no 1º ano</li>
             <li>Agenda online integrada ao site</li>
             <li>Confirmação automática do agendamento</li>
             <li>Lembrete automático um dia antes</li>
           </ul>
         </div>
       </div>
-      <p class="pacote-note">Já tem Agenda Connect e quer evoluir pro Agenda Pro? Nos primeiros 3 meses, você paga só a diferença.</p>
+      <p class="pacote-note">Já tem o Agenda Connect e quer evoluir? Nos primeiros 3 meses você pode fazer um upgrade para o Agenda Pro pagando apenas a diferença.</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- COMO FUNCIONA -->
-  <section id="como-funciona">
+<section id="como-funciona" class="alt-bg">
+<div class="wrap">
     <div class="section-head">
       <span class="section-label">como funciona</span>
       <h2>Do briefing ao site no ar</h2>
@@ -715,13 +821,14 @@
         </div>
       </div>
     </div>
-  </section>
+</div>
+</section>
 
-  <!-- DIAGNOSTICO -->
-  <section id="diagnostico">
+<section id="diagnostico">
+<div class="wrap">
     <div class="section-head">
       <span class="section-label">diagnóstico rápido</span>
-      <h2 id="diag-heading">Qual pacote combina com você agora?</h2>
+      <h2 id="diag-heading">Qual é a sua nota de presença online?</h2>
     </div>
 
     <div class="offer-toggle">
@@ -734,29 +841,46 @@
         <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-progress-bar"></div></div>
 
         <div class="quiz-step active" data-step="0">
-          <p class="quiz-question">Quando alguém procura seu serviço no Google, te encontra?</p>
+          <p class="quiz-question">Hoje, quando alguém quer saber mais sobre seu trabalho, pra onde você manda a pessoa?</p>
           <div class="quiz-options">
-            <button class="quiz-option" data-axis="presenca" data-score="0"><span>Sim, tenho site e apareço bem</span><span class="arrow">→</span></button>
-            <button class="quiz-option" data-axis="presenca" data-score="2"><span>Tenho perfil no Google, mas sem site</span><span class="arrow">→</span></button>
-            <button class="quiz-option" data-axis="presenca" data-score="3"><span>Não apareço em nada</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="34"><span>Meu site</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="17"><span>Meu Instagram</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="0"><span>Só mando uma mensagem explicando</span><span class="arrow">→</span></button>
           </div>
         </div>
 
         <div class="quiz-step" data-step="1">
-          <p class="quiz-question">Como seus clientes entram em contato pra pedir orçamento?</p>
+          <p class="quiz-question">Se te pedissem seu site agora, você teria um link pra mandar?</p>
           <div class="quiz-options">
-            <button class="quiz-option" data-axis="visibilidade" data-score="3"><span>Me acham no Instagram e mandam DM</span><span class="arrow">→</span></button>
-            <button class="quiz-option" data-axis="visibilidade" data-score="1"><span>Pedem pelo WhatsApp, mas respondo tudo manual</span><span class="arrow">→</span></button>
-            <button class="quiz-option" data-axis="visibilidade" data-score="0"><span>Tenho um processo organizado</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="34"><span>Sim</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="17"><span>Não, só redes sociais</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="0"><span>Não tenho nada</span><span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="2">
+          <p class="quiz-question">Comparando com um concorrente que já tem site, quem parece mais profissional pra um cliente novo?</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-score="34"><span>Eu, claramente</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="17"><span>Empataria</span><span class="arrow">→</span></button>
+            <button class="quiz-option" data-score="0"><span>O concorrente, sem dúvida</span><span class="arrow">→</span></button>
           </div>
         </div>
 
         <div class="quiz-result" id="quiz-result">
-          <div class="result-badge"><span class="result-dot" id="result-dot"></span><span id="result-label">perfil</span></div>
+          <p class="result-score mono" id="result-score">0<span class="result-score-max">/100</span></p>
           <p class="result-title" id="result-title">título</p>
           <p class="result-desc" id="result-desc">descrição</p>
-          <p class="result-price" id="result-price">R$ 0</p>
-          <a class="result-cta" id="result-cta" href="#" target="_blank" rel="noopener">falar sobre esse pacote →</a>
+
+          <div class="lead-gate" id="lead-gate">
+            <p class="lead-gate-label">Preencha pra liberar o preço de lançamento e falar direto comigo</p>
+            <input id="lead-empresa" type="text" placeholder="Nome da empresa">
+            <input id="lead-tipo" type="text" placeholder="Tipo de negócio (ex: manicure, advogado...)">
+            <input id="lead-whats" type="text" placeholder="Seu WhatsApp com DDD">
+            <button id="lead-submit" class="btn-primary" type="button">liberar contato →</button>
+          </div>
+
+          <a class="result-cta" id="result-cta" href="#" target="_blank" rel="noopener" style="display:none;">falar no whatsapp →</a>
           <button class="quiz-retry" id="quiz-retry">refazer o diagnóstico</button>
         </div>
       </div>
@@ -781,6 +905,7 @@
           <p class="calc-result-label">você pode estar perdendo por mês com faltas</p>
           <p class="calc-result-value mono" id="calc-perda">R$ 1.440</p>
           <p class="calc-result-note" id="calc-reducao">Lembrete automático pode reduzir faltas em até 25-30%* — isso pode significar <strong>R$ 950</strong> recuperados por mês.</p>
+          <p class="calc-result-compare" id="calc-compare">A mensalidade do plano custa R$ 74,90 — ou seja, essa recuperação já cobre a mensalidade <strong>de sobra</strong>.</p>
           <p class="calc-footnote">*estimativa baseada em estudos sobre redução de falta com lembrete automático de agendamento</p>
         </div>
       </div>
@@ -802,34 +927,95 @@
               <span class="wa-bubble-meta">09:14 <i class="wa-check">✓✓</i></span>
             </div>
             <div class="wa-bubble">
-              Lembrete: seu horário é amanhã às 14h, [Nome do cliente].
+              Lembrete: seu horário é amanhã às 14h, [Nome do cliente]. O que você deseja fazer?
               <span class="wa-bubble-meta">08:00 <i class="wa-check">✓✓</i></span>
+            </div>
+            <div class="wa-quick-replies">
+              <div class="wa-quick-reply">Confirmar horário</div>
+              <div class="wa-quick-reply">Remarcar horário</div>
+              <div class="wa-quick-reply">Desmarcar</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+</div>
+</section>
 
-  <!-- PROVA -->
-  <section>
+<section class="alt-bg">
+<div class="wrap">
     <div class="section-head">
       <span class="section-label">prova</span>
-      <h2>Cases entregues</h2>
+      <h2>Projetos no ar</h2>
     </div>
-    <div class="prova-box">
-      <span class="prova-badge">em breve</span>
-      <p>Primeiro case entregue e validado com cliente real — o depoimento completo chega aqui assim que estiver pronto.</p>
+    <div class="cases-grid cases-grid-1">
+      <div class="case-card muted">
+        <span class="prova-badge">em breve</span>
+        <p class="case-desc">Próximo case chegando assim que o projeto for entregue e validado com o cliente.</p>
+      </div>
     </div>
-  </section>
+</div>
+</section>
 
-  <!-- CTA FINAL -->
-  <section class="cta-final" id="contato">
+<section class="alt-bg">
+<div class="wrap">
+    <div class="section-head">
+      <span class="section-label">dúvidas</span>
+      <h2>Perguntas frequentes</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <p class="faq-q">Qual o prazo de entrega?<span class="faq-chevron">▾</span></p>
+        <p class="faq-a">O prazo é de até 15 dias, contado a partir da aprovação do briefing.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">O que eu preciso te enviar pra começar?<span class="faq-chevron">▾</span></p>
+        <p class="faq-a">Informações sobre sua empresa, logo, fotos e o que mais for relevante pro seu site. Com isso em mãos e o briefing aprovado, já começamos o projeto.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Quais as formas de pagamento?<span class="faq-chevron">▾</span></p>
+        <p class="faq-a">Pix ou cartão, via Mercado Pago.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Por que aparece "KM Digital" no pagamento, e não "Klippy"?<span class="faq-chevron">▾</span></p>
+        <p class="faq-a">KM Digital é o nome da conta responsável por processar os pagamentos da Klippy. A transação é segura e realizada pelo Mercado Pago. Pode fechar tranquilo, é 100% legítimo.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Preciso ter domínio e hospedagem próprios?<span class="faq-chevron">▾</span></p>
+        <p class="faq-a">Não precisa — domínio e hospedagem já vêm inclusos no primeiro ano. Se você já tiver um domínio próprio, a Klippy também pode usar o seu. A partir do segundo ano, os detalhes de renovação serão combinados em contrato.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">E se eu quiser mudar algo depois dos 15 dias?<span class="faq-chevron">▾</span></p>
+        <p class="faq-a">Ajustes depois desse prazo fazem parte dos nossos planos de manutenção — é só falar com a Klippy que te mostramos qual opção encaixa melhor com o que você precisa.</p>
+      </div>
+    </div>
+
+    <div class="offer-panel" data-faq-panel="agenda">
+      <div class="faq-list">
+        <div class="faq-item">
+          <p class="faq-q">Qual a diferença entre Agenda Connect e Agenda Pro?<span class="faq-chevron">▾</span></p>
+          <p class="faq-a">Agenda Connect é só a automação de agendamento, com confirmação e lembrete automático via WhatsApp, pra quem já tem site ou só precisa resolver a agenda. Agenda Pro inclui o site completo com a sua identidade visual, além dessa mesma automação integrada ao site.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">A automação de WhatsApp funciona com meu número pessoal ou preciso de outro?<span class="faq-chevron">▾</span></p>
+          <p class="faq-a">A Klippy recomenda usar um número separado (pode ser um chip pré-pago simples) só pra essa automação — assim seu WhatsApp pessoal continua livre, e o número da agenda fica dedicado, deixando o envio das confirmações mais estável.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">E se meu WhatsApp parar de enviar mensagem?<span class="faq-chevron">▾</span></p>
+          <p class="faq-a">Isso é raro, mas pode acontecer. Se notar qualquer instabilidade, é só chamar a Klippy que a conexão é reestabelecida o quanto antes.</p>
+        </div>
+      </div>
+    </div>
+</div>
+</section>
+
+<section class="cta-final" id="contato">
+<div class="wrap">
     <h2>Vamos colocar seu negócio no mapa.</h2>
     <a class="btn-primary" href="https://wa.me/5548991461739" target="_blank" rel="noopener">falar no whatsapp →</a>
-  </section>
-
 </div>
+</section>
 
 <footer>klippy © 2026 — todos os direitos reservados</footer>
 
@@ -849,7 +1035,10 @@
     document.querySelectorAll('.offer-panel[data-diag-panel]').forEach(function(p){
       p.classList.toggle('active', p.dataset.diagPanel === target);
     });
-    diagHeading.textContent = target === 'site' ? 'Qual pacote combina com você agora?' : 'Quanto a falta de cliente está custando pra você?';
+    document.querySelectorAll('.offer-panel[data-faq-panel]').forEach(function(p){
+      p.classList.toggle('active', p.dataset.faqPanel === target);
+    });
+    diagHeading.textContent = target === 'site' ? 'Qual é a sua nota de presença online?' : 'Quanto a falta de cliente está custando pra você?';
   }
 
   document.querySelectorAll('.offer-toggle-btn[data-offer]').forEach(function(btn){
@@ -859,32 +1048,19 @@
     btn.addEventListener('click', function(){ setGlobalOffer(btn.dataset.diag); });
   });
 
-  // ---- quiz (site) ----
+  // ---- diagnostico (site) ----
   var steps = document.querySelectorAll('.quiz-step');
   var progressBar = document.getElementById('quiz-progress-bar');
   var resultPanel = document.getElementById('quiz-result');
   var currentStep = 0;
-  var scores = { presenca: 0, visibilidade: 0 };
+  var totalScore = 0;
   var WHATS_NUMBER = '5548991461739';
 
-  var profiles = {
-    presenca: {
-      color: 'var(--y)',
-      label: 'perfil presença',
-      title: 'Você precisa do Pacote Presença',
-      desc: 'Seu primeiro passo é existir online: site profissional pra você parar de depender só do boca a boca.',
-      price: 'R$ 699',
-      whatsappMsg: 'Fiz o diagnóstico no site e o resultado indicou o Pacote Presença — quero saber mais.'
-    },
-    visibilidade: {
-      color: 'var(--o)',
-      label: 'perfil visibilidade',
-      title: 'Você precisa do Pacote Visibilidade',
-      desc: 'Você já tem alguma presença, mas ainda perde cliente por falta de um processo organizado de contato.',
-      price: 'R$ 999',
-      whatsappMsg: 'Fiz o diagnóstico no site e o resultado indicou o Pacote Visibilidade — quero saber mais.'
-    }
-  };
+  var scoreTiers = [
+    { max: 33, title: 'Você está invisível online', desc: 'Quem procura por você hoje não encontra nada sólido — e provavelmente já foi parar no concorrente que tem site.' },
+    { max: 66, title: 'Você existe, mas de forma frágil', desc: 'Você tem alguma presença, mas nada que passe confiança de verdade pra quem está decidindo entre você e outra pessoa.' },
+    { max: 100, title: 'Você já tem alguma presença, mas ainda sem um site de verdade', desc: 'Falta o passo que faz a diferença entre "parecer profissional" e "ser confirmado como profissional" na cabeça de quem pesquisa.' }
+  ];
 
   function updateProgress(){
     var pct = (currentStep / steps.length) * 100;
@@ -903,27 +1079,21 @@
     steps.forEach(function(step){ step.classList.remove('active'); });
     progressBar.style.width = '100%';
 
-    var priority = ['presenca', 'visibilidade'];
-    var winner = priority[0];
-    priority.forEach(function(key){
-      if(scores[key] > scores[winner]) winner = key;
-    });
+    var score = Math.min(100, totalScore);
+    var tier = scoreTiers.find(function(t){ return score <= t.max; }) || scoreTiers[scoreTiers.length - 1];
 
-    var profile = profiles[winner];
-    document.getElementById('result-dot').style.background = profile.color;
-    document.getElementById('result-label').textContent = profile.label;
-    document.getElementById('result-title').textContent = profile.title;
-    document.getElementById('result-desc').textContent = profile.desc;
-    document.getElementById('result-price').textContent = profile.price;
-    document.getElementById('result-cta').href = 'https://wa.me/' + WHATS_NUMBER + '?text=' + encodeURIComponent(profile.whatsappMsg);
+    document.getElementById('result-score').innerHTML = score + '<span class="result-score-max">/100</span>';
+    document.getElementById('result-title').textContent = tier.title;
+    document.getElementById('result-desc').textContent = tier.desc;
+
+    document.getElementById('lead-gate').style.display = 'block';
+    document.getElementById('result-cta').style.display = 'none';
     resultPanel.classList.add('active');
   }
 
   document.querySelectorAll('.quiz-option').forEach(function(btn){
     btn.addEventListener('click', function(){
-      var axis = btn.dataset.axis;
-      var score = parseInt(btn.dataset.score, 10);
-      scores[axis] += score;
+      totalScore += parseInt(btn.dataset.score, 10);
 
       if(currentStep < steps.length - 1){
         goToStep(currentStep + 1);
@@ -933,8 +1103,30 @@
     });
   });
 
+  document.getElementById('lead-submit').addEventListener('click', function(){
+    var empresa = document.getElementById('lead-empresa').value.trim();
+    var tipo = document.getElementById('lead-tipo').value.trim();
+    var whats = document.getElementById('lead-whats').value.trim();
+
+    if(!whats){
+      document.getElementById('lead-whats').focus();
+      return;
+    }
+
+    var msg = 'Fiz o diagnóstico no site da Klippy e quero saber mais sobre o preço de lançamento.';
+    if(empresa) msg += ' Empresa: ' + empresa + '.';
+    if(tipo) msg += ' Tipo de negócio: ' + tipo + '.';
+
+    document.getElementById('result-cta').href = 'https://wa.me/' + WHATS_NUMBER + '?text=' + encodeURIComponent(msg);
+    document.getElementById('lead-gate').style.display = 'none';
+    document.getElementById('result-cta').style.display = 'inline-flex';
+  });
+
   document.getElementById('quiz-retry').addEventListener('click', function(){
-    scores = { presenca: 0, visibilidade: 0 };
+    totalScore = 0;
+    document.getElementById('lead-empresa').value = '';
+    document.getElementById('lead-tipo').value = '';
+    document.getElementById('lead-whats').value = '';
     resultPanel.classList.remove('active');
     goToStep(0);
   });
@@ -979,6 +1171,13 @@
   calcTicket.addEventListener('input', updateCalc);
   calcFalta.addEventListener('input', updateCalc);
   updateCalc();
+
+  // ---- faq accordion ----
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      q.parentElement.classList.toggle('open');
+    });
+  });
 })();
 </script>
 
