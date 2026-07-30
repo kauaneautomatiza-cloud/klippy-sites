@@ -11,7 +11,7 @@
 <style>
   :root{
     --bg:#08060F;
-    --bg-alt:#171128;
+    --bg-alt:#221A3D;
     --surface:#12101C;
     --surface-2:#191527;
     --text:#F5F3FA;
@@ -166,17 +166,6 @@
     .stats{ grid-template-columns:repeat(2, 1fr); gap:24px; }
   }
 
-  .hero-mockup{
-    max-width:320px; margin:40px auto 0;
-    background:var(--surface); border:1px solid var(--line); border-radius:14px;
-    padding:16px; position:relative; z-index:1;
-  }
-  .hero-mockup-dots{ display:flex; gap:5px; margin-bottom:12px; }
-  .hero-mockup-dots span{ width:7px; height:7px; border-radius:50%; background:var(--line); display:inline-block; }
-  .hero-mockup-bar{ height:8px; border-radius:4px; background:var(--surface-2); margin-bottom:8px; }
-  .hero-mockup-bar.short{ width:60%; }
-  .hero-mockup-card{ height:70px; border-radius:8px; background:linear-gradient(135deg, rgba(139,92,246,0.25), rgba(232,121,200,0.15)); margin-top:14px; }
-
   /* ---------- section head ---------- */
   .section-head{ text-align:center; margin-bottom:36px; }
   .section-label{
@@ -315,7 +304,14 @@
   .pacote-single .pacote-tag{ margin-bottom:16px; }
   .pacote-single .pacote-price{ font-size:36px; margin-bottom:22px; }
   .pacote-single .pacote-list{ text-align:left; margin-bottom:24px; }
-  .pacote-cta{ width:100%; justify-content:center; }
+  .pacote-cta{ width:100%; justify-content:center; margin-bottom:10px; }
+  .pacote-cta-secondary{
+    display:block; text-align:center;
+    font-family:'Inter', sans-serif; font-size:12.5px; color:var(--text-mute);
+    text-decoration:underline;
+  }
+  .pacote-note-secondary{ text-align:center; font-size:12.5px; margin-top:16px; }
+  .pacote-note-secondary a{ color:var(--accent-2); text-decoration:underline; }
 
   @media (max-width:760px){
     .pacotes-grid{ grid-template-columns:1fr; }
@@ -534,17 +530,10 @@
     font-size:9.5px; color:#667781;
     display:flex; align-items:center; gap:3px;
   }
-  .wa-quick-replies{
-    background:#fff; border-radius:8px; overflow:hidden;
-    max-width:88%; align-self:flex-start;
-    box-shadow:0 1px 1px rgba(0,0,0,0.08);
+  .wa-bubble-reply{
+    background:#fff; align-self:flex-end;
+    border-radius:8px 8px 2px 8px;
   }
-  .wa-quick-reply{
-    padding:9px 12px; text-align:center;
-    font-size:12px; font-weight:500; color:#00a5f4;
-    border-top:1px solid #e5e5e5;
-  }
-  .wa-quick-reply:first-child{ border-top:none; }
   .wa-check{ color:#53bdeb; font-style:normal; }
 
   /* ---------- prova ---------- */
@@ -661,12 +650,6 @@
       <div class="stat"><div class="stat-num mono">1:1</div><div class="stat-label">suporte direto comigo</div></div>
     </div>
   </div>
-  <div class="hero-mockup" aria-hidden="true">
-    <div class="hero-mockup-dots"><span></span><span></span><span></span></div>
-    <div class="hero-mockup-bar"></div>
-    <div class="hero-mockup-bar short"></div>
-    <div class="hero-mockup-card"></div>
-  </div>
 
 </div>
 </section>
@@ -746,7 +729,8 @@
           <li>Botão de contato direto via WhatsApp</li>
           <li>1 atualização grátis em até 15 dias</li>
         </ul>
-        <a class="btn-primary pacote-cta" href="#diagnostico">fazer diagnóstico →</a>
+        <a class="btn-primary pacote-cta" href="https://wa.me/5548991461739?text=Ol%C3%A1!%20Quero%20fechar%20o%20Pacote%20Presen%C3%A7a%20(R%24499%2C%20pre%C3%A7o%20de%20lan%C3%A7amento)." target="_blank" rel="noopener">quero meu site →</a>
+        <a class="pacote-cta-secondary" href="#diagnostico">ou faça o diagnóstico primeiro</a>
       </div>
       <p class="pacote-note">Precisa de mais ajustes depois da atualização grátis? Em breve, planos de manutenção mensal.</p>
     </div>
@@ -763,6 +747,7 @@
             <li>Lembrete automático um dia antes</li>
             <li>Sem site novo — conecta no que você já usa</li>
           </ul>
+          <a class="btn-primary pacote-cta" href="https://wa.me/5548991461739?text=Ol%C3%A1!%20Quero%20fechar%20o%20Agenda%20Connect%20(R%24120%20%2B%20R%2474%2C90%2Fm%C3%AAs)." target="_blank" rel="noopener">quero minha agenda →</a>
         </div>
 
         <div class="pacote-card featured">
@@ -777,8 +762,10 @@
             <li>Confirmação automática do agendamento</li>
             <li>Lembrete automático um dia antes</li>
           </ul>
+          <a class="btn-primary pacote-cta" href="https://wa.me/5548991461739?text=Ol%C3%A1!%20Quero%20fechar%20o%20Agenda%20Pro%20(R%24349%20%2B%20R%2474%2C90%2Fm%C3%AAs)." target="_blank" rel="noopener">quero site + agenda →</a>
         </div>
       </div>
+      <p class="pacote-note-secondary"><a href="#diagnostico">ou veja quanto você pode economizar com o diagnóstico de faltas</a></p>
       <p class="pacote-note">Já tem o Agenda Connect e quer evoluir? Nos primeiros 3 meses você pode fazer um upgrade para o Agenda Pro pagando apenas a diferença.</p>
     </div>
   </div>
@@ -927,13 +914,12 @@
               <span class="wa-bubble-meta">09:14 <i class="wa-check">✓✓</i></span>
             </div>
             <div class="wa-bubble">
-              Lembrete: seu horário é amanhã às 14h, [Nome do cliente]. O que você deseja fazer?
+              Lembrete: seu horário é amanhã às 14h, [Nome do cliente]. Digite 1 para confirmar, 2 para remarcar ou 3 para desmarcar.
               <span class="wa-bubble-meta">08:00 <i class="wa-check">✓✓</i></span>
             </div>
-            <div class="wa-quick-replies">
-              <div class="wa-quick-reply">Confirmar horário</div>
-              <div class="wa-quick-reply">Remarcar horário</div>
-              <div class="wa-quick-reply">Desmarcar</div>
+            <div class="wa-bubble wa-bubble-reply">
+              1
+              <span class="wa-bubble-meta">08:03</span>
             </div>
           </div>
         </div>
@@ -1019,6 +1005,10 @@
 
 <footer>klippy © 2026 — todos os direitos reservados</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  var sbLeads = window.supabase.createClient('https://bcsoqadonxscdhbxrdmc.supabase.co', 'sb_publishable_9s7cdcPrZ9W4hluY89XtLQ_6kPIqx4L');
+</script>
 <script>
 (function(){
   // ---- toggle sincronizado: pacotes + diagnostico compartilham o mesmo estado ----
@@ -1107,6 +1097,7 @@
     var empresa = document.getElementById('lead-empresa').value.trim();
     var tipo = document.getElementById('lead-tipo').value.trim();
     var whats = document.getElementById('lead-whats').value.trim();
+    var submitBtn = document.getElementById('lead-submit');
 
     if(!whats){
       document.getElementById('lead-whats').focus();
@@ -1117,9 +1108,25 @@
     if(empresa) msg += ' Empresa: ' + empresa + '.';
     if(tipo) msg += ' Tipo de negócio: ' + tipo + '.';
 
-    document.getElementById('result-cta').href = 'https://wa.me/' + WHATS_NUMBER + '?text=' + encodeURIComponent(msg);
-    document.getElementById('lead-gate').style.display = 'none';
-    document.getElementById('result-cta').style.display = 'inline-flex';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'salvando...';
+
+    sbLeads.from('diagnostico_leads').insert({
+      empresa: empresa || null,
+      tipo_negocio: tipo || null,
+      whatsapp: whats,
+      pontuacao: Math.min(100, totalScore),
+      produto_interesse: 'Pacote Presença'
+    }).then(function(){
+      document.getElementById('result-cta').href = 'https://wa.me/' + WHATS_NUMBER + '?text=' + encodeURIComponent(msg);
+      document.getElementById('lead-gate').style.display = 'none';
+      document.getElementById('result-cta').style.display = 'inline-flex';
+    }).catch(function(err){
+      console.error('Erro ao salvar lead:', err);
+      document.getElementById('result-cta').href = 'https://wa.me/' + WHATS_NUMBER + '?text=' + encodeURIComponent(msg);
+      document.getElementById('lead-gate').style.display = 'none';
+      document.getElementById('result-cta').style.display = 'inline-flex';
+    });
   });
 
   document.getElementById('quiz-retry').addEventListener('click', function(){
