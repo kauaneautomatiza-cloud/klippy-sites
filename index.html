@@ -840,7 +840,7 @@
             <p class="lead-gate-label">Preencha pra liberar o preço de lançamento e falar direto comigo</p>
             <input id="lead-empresa" type="text" placeholder="Nome da empresa">
             <input id="lead-tipo" type="text" placeholder="Tipo de negócio (ex: manicure, advogado...)">
-            <input id="lead-whats" type="text" placeholder="Seu WhatsApp com DDD">
+            <input id="lead-whats" type="tel" inputmode="numeric" placeholder="Seu WhatsApp com DDD" maxlength="11">
             <button id="lead-submit" class="btn-primary" type="button">liberar contato →</button>
           </div>
 
@@ -1046,6 +1046,10 @@
         showResult();
       }
     });
+  });
+
+  document.getElementById('lead-whats').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g, '');
   });
 
   document.getElementById('lead-submit').addEventListener('click', function(){
